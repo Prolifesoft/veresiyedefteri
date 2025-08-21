@@ -8,6 +8,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/ledger_views.xml',
+        'views/partner_views.xml',
         'views/payment_wizard_views.xml',
         'report/receipt_report.xml',
     ],
