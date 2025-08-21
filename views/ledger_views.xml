@@ -1,0 +1,67 @@
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_veresiye_defteri_tree" model="ir.ui.view">
+            <field name="name">veresiye.defteri.tree</field>
+            <field name="model">veresiye.defteri</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="partner_id"/>
+                    <field name="phone"/>
+                    <field name="total_amount"/>
+                    <field name="last_entry_date"/>
+                    <field name="date"/>
+                    <field name="paid_amount"/>
+                    <field name="remaining_amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_veresiye_defteri_form" model="ir.ui.view">
+            <field name="name">veresiye.defteri.form</field>
+            <field name="model">veresiye.defteri</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="phone" readonly="1"/>
+                            <field name="date"/>
+                            <field name="paid_amount"/>
+                            <field name="remaining_amount" readonly="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Satırlar">
+                                <field name="line_ids">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="quantity" sum="Toplam"/>
+                                        <field name="price_unit"/>
+                                        <field name="subtotal" sum="Toplam" readonly="1"/>
+                                        <field name="date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <header>
+                        <button name="print_receipt" type="object" string="Yazdır Fiş" class="btn-primary"/>
+                        <button name="action_open_payment_wizard" type="object" string="Ödeme Yap" class="btn-secondary"/>
+                        <field name="total_amount" readonly="1"/>
+                    </header>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action and Menu -->
+        <record id="action_veresiye_defteri" model="ir.actions.act_window">
+            <field name="name">Veresiye Defteri</field>
+            <field name="res_model">veresiye.defteri</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_veresiye_root" name="Veresiye Defteri"/>
+        <menuitem id="menu_veresiye_defteri" parent="menu_veresiye_root" action="action_veresiye_defteri"/>
+    </data>
+</odoo>
