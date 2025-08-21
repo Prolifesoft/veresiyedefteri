@@ -42,7 +42,7 @@
             </field>
         </record>
 
-        <!-- Action and Menu -->
+        <!-- Action -->
         <record id="action_veresiye_partner" model="ir.actions.act_window">
             <field name="name">Veresiye Defteri</field>
             <field name="res_model">res.partner</field>
@@ -50,7 +50,5 @@
             <field name="view_id" ref="view_partner_veresiye_tree"/>
             <field name="domain">[('veresiye_ledger_ids', '!=', False)]</field>
         </record>
-
-        <menuitem id="menu_veresiye_defteri" parent="menu_veresiye_root" action="action_veresiye_partner"/>
     </data>
 </odoo>

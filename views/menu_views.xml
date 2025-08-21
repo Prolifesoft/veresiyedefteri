@@ -1,0 +1,5 @@
+<odoo>
+    <data>
+        <menuitem id="menu_veresiye_root" name="Veresiye Defteri" sequence="10" action="action_veresiye_partner"/>
+    </data>
+</odoo>

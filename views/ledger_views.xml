@@ -53,7 +53,5 @@
                 </form>
             </field>
         </record>
-
-        <menuitem id="menu_veresiye_root" name="Veresiye Defteri"/>
     </data>
 </odoo>
