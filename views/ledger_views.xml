@@ -23,6 +23,11 @@
             <field name="model">veresiye.defteri</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <button name="print_receipt" type="object" string="Yazdır Fiş" class="btn-primary"/>
+                        <button name="action_open_payment_wizard" type="object" string="Ödeme Yap" class="btn-secondary"/>
+                        <field name="total_amount" readonly="1"/>
+                    </header>
                     <sheet>
                         <group>
                             <field name="partner_id"/>
@@ -45,23 +50,10 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <header>
-                        <button name="print_receipt" type="object" string="Yazdır Fiş" class="btn-primary"/>
-                        <button name="action_open_payment_wizard" type="object" string="Ödeme Yap" class="btn-secondary"/>
-                        <field name="total_amount" readonly="1"/>
-                    </header>
                 </form>
             </field>
         </record>
 
-        <!-- Action and Menu -->
-        <record id="action_veresiye_defteri" model="ir.actions.act_window">
-            <field name="name">Veresiye Defteri</field>
-            <field name="res_model">veresiye.defteri</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
         <menuitem id="menu_veresiye_root" name="Veresiye Defteri"/>
-        <menuitem id="menu_veresiye_defteri" parent="menu_veresiye_root" action="action_veresiye_defteri"/>
     </data>
 </odoo>

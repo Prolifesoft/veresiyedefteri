@@ -32,7 +32,7 @@ class VeresiyeDefteri(models.Model):
             record.last_entry_date = max(dates) if dates else False
 
     def print_receipt(self):
-        return self.env.ref("veresiye_defteri.report_veresiye_receipt").report_action(self)
+        return self.env.ref("veresiyedefteri.report_veresiye_receipt").report_action(self)
 
     def action_open_payment_wizard(self):
         self.ensure_one()
@@ -63,3 +63,9 @@ class VeresiyeDefteriLine(models.Model):
     def _compute_subtotal(self):
         for line in self:
             line.subtotal = line.quantity * line.price_unit
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        for line in self:
+            if line.product_id:
+                line.price_unit = line.product_id.list_price

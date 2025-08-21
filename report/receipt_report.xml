@@ -13,8 +13,8 @@
         </record>
 
         <report id="report_veresiye_receipt" model="veresiye.defteri" string="Veresiye Fişi"
-                report_type="qweb-pdf" name="veresiye_defteri.report_receipt"
-                file="veresiye_defteri.report_receipt" paperformat="paperformat_veresiye"/>
+                report_type="qweb-pdf" name="veresiyedefteri.report_receipt"
+                file="veresiyedefteri.report_receipt" paperformat="paperformat_veresiye"/>
 
         <template id="report_receipt">
             <t t-call="web.basic_layout">
