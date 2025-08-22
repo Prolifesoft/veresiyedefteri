@@ -6,6 +6,14 @@ class VeresiyeDefteri(models.Model):
     _name = 'veresiye.defteri'
     _description = 'Veresiye Defteri'
 
+    _sql_constraints = [
+        (
+            'partner_unique',
+            'unique(partner_id)',
+            'Her müşteri için yalnızca bir defter bulunabilir.',
+        ),
+    ]
+
     partner_id = fields.Many2one(
         'res.partner', string='Müşteri', required=True
     )

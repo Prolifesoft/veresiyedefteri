@@ -6,6 +6,11 @@
             <field name="model">veresiye.defteri</field>
             <field name="arch" type="xml">
                 <tree>
+                    <control>
+                        <button name="print_receipt" type="object" string="Yazdır"/>
+                        <button name="base.action_import" type="action" string="Toplu İçe Aktar"/>
+                        <button name="base.action_export" type="action" string="Toplu Dışa Aktar"/>
+                    </control>
                     <field name="partner_id"/>
                     <field name="phone"/>
                     <field name="total_amount" sum="Toplam"/>
