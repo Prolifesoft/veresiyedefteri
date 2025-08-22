@@ -25,8 +25,9 @@ class VeresiyeDefteri(models.Model):
         currency_field='currency_id',
     )
     paid_amount = fields.Monetary(
+        compute='_compute_paid',
+        store=True,
         string='Ödenen',
-        default=0.0,
         currency_field='currency_id',
     )
     last_payment_date = fields.Date(string='Ödeme Tarihi')
@@ -53,6 +54,11 @@ class VeresiyeDefteri(models.Model):
         for record in self:
             record.remaining_amount = record.total_amount - record.paid_amount
 
+    @api.depends('line_ids.paid_amount')
+    def _compute_paid(self):
+        for record in self:
+            record.paid_amount = sum(record.line_ids.mapped('paid_amount'))
+
     @api.depends('line_ids.date')
     def _compute_last_entry(self):
         for record in self:
@@ -61,12 +67,12 @@ class VeresiyeDefteri(models.Model):
 
     def print_receipt(self):
         action = self.env.ref(
-            "veresiyedefteri.action_report_veresiye_receipt",
+            "invoice_pos_receipt_safe.fixed_pos_template",
             raise_if_not_found=False,
         )
         if not action:
             raise UserError(
-                "'veresiyedefteri.action_report_veresiye_receipt' not found"
+                "'invoice_pos_receipt_safe.fixed_pos_template' not found"
             )
         return action.report_action(self)
 
@@ -99,7 +105,7 @@ class VeresiyeDefteriLine(models.Model):
         'veresiye.defteri', string='Defter', required=True, ondelete='cascade'
     )
     product_id = fields.Many2one(
-        'product.product', string='Ürün', required=True
+        'product.product', string='Ürün'
     )
     quantity = fields.Float(string='Adet', default=1.0)
     name = fields.Char(string='Açıklama')
@@ -118,6 +124,11 @@ class VeresiyeDefteriLine(models.Model):
     )
     date = fields.Date(
         default=fields.Date.context_today, string='Tarih'
+    )
+    paid_amount = fields.Monetary(
+        string='Ödenen',
+        group_operator='sum',
+        currency_field='currency_id',
     )
     currency_id = fields.Many2one(
         'res.currency', related='ledger_id.currency_id', store=True

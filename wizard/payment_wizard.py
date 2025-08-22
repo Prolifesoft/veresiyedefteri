@@ -21,6 +21,13 @@ class VeresiyePaymentWizard(models.TransientModel):
     def action_confirm(self):
         self.ensure_one()
         ledger = self.ledger_id
-        ledger.paid_amount += self.amount
         ledger.last_payment_date = self.payment_date
+        self.env['veresiye.defteri.line'].create({
+            'ledger_id': ledger.id,
+            'name': 'Ödeme',
+            'quantity': 0,
+            'price_unit': 0,
+            'paid_amount': self.amount,
+            'date': self.payment_date,
+        })
         return {'type': 'ir.actions.act_window_close'}
