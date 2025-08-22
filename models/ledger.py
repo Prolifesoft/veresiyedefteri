@@ -32,7 +32,7 @@ class VeresiyeDefteri(models.Model):
             record.last_entry_date = max(dates) if dates else False
 
     def print_receipt(self):
-        return self.env.ref("veresiye_defteri.report_veresiye_receipt").report_action(self)
+        return self.env.ref("veresiyedefteri.report_veresiye_receipt").report_action(self)
 
     def action_open_payment_wizard(self):
         self.ensure_one()
