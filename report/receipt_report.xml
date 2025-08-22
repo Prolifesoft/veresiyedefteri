@@ -45,6 +45,7 @@
                         </table>
                         <p><strong>Toplam:</strong> <span t-esc="doc.total_amount"/></p>
                         <p><strong>Ödenen:</strong> <span t-esc="doc.paid_amount"/></p>
+                        <p><strong>Ödeme Tarihi:</strong> <span t-esc="doc.last_payment_date"/></p>
                         <p><strong>Kalan:</strong> <span t-esc="doc.remaining_amount"/></p>
                     </div>
                 </t>

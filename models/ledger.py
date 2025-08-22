@@ -22,6 +22,7 @@ class VeresiyeDefteri(models.Model):
         compute='_compute_totals', store=True, string='Borç Tutarı'
     )
     paid_amount = fields.Monetary(string='Ödenen', default=0.0)
+    last_payment_date = fields.Date(string='Ödeme Tarihi')
     remaining_amount = fields.Monetary(
         compute='_compute_remaining', store=True, string='Kalan'
     )
