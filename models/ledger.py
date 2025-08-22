@@ -19,12 +19,22 @@ class VeresiyeDefteri(models.Model):
         'veresiye.defteri.line', 'ledger_id', string='Satırlar'
     )
     total_amount = fields.Monetary(
-        compute='_compute_totals', store=True, string='Borç Tutarı'
+        compute='_compute_totals',
+        store=True,
+        string='Borç Tutarı',
+        currency_field='currency_id',
     )
-    paid_amount = fields.Monetary(string='Ödenen', default=0.0)
+    paid_amount = fields.Monetary(
+        string='Ödenen',
+        default=0.0,
+        currency_field='currency_id',
+    )
     last_payment_date = fields.Date(string='Ödeme Tarihi')
     remaining_amount = fields.Monetary(
-        compute='_compute_remaining', store=True, string='Kalan'
+        compute='_compute_remaining',
+        store=True,
+        string='Kalan',
+        currency_field='currency_id',
     )
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.company.currency_id
@@ -51,12 +61,12 @@ class VeresiyeDefteri(models.Model):
 
     def print_receipt(self):
         action = self.env.ref(
-            "veresiyedefteri.report_veresiye_receipt",
+            "veresiyedefteri.action_report_veresiye_receipt",
             raise_if_not_found=False,
         )
         if not action:
             raise UserError(
-                "'veresiyedefteri.report_veresiye_receipt' not found"
+                "'veresiyedefteri.action_report_veresiye_receipt' not found"
             )
         return action.report_action(self)
 
@@ -92,14 +102,19 @@ class VeresiyeDefteriLine(models.Model):
         'product.product', string='Ürün', required=True
     )
     quantity = fields.Float(string='Adet', default=1.0)
+    name = fields.Char(string='Açıklama')
     price_unit = fields.Monetary(
-        string='Fiyat', required=True, group_operator='sum'
+        string='Fiyat',
+        required=True,
+        group_operator='sum',
+        currency_field='currency_id',
     )
     subtotal = fields.Monetary(
         compute='_compute_subtotal',
         store=True,
         string='Ara Toplam',
         group_operator='sum',
+        currency_field='currency_id',
     )
     date = fields.Date(
         default=fields.Date.context_today, string='Tarih'

@@ -8,12 +8,12 @@
                 <tree>
                     <field name="partner_id"/>
                     <field name="phone"/>
-                    <field name="total_amount"/>
+                    <field name="total_amount" sum="Toplam"/>
+                    <field name="paid_amount" sum="Toplam"/>
+                    <field name="remaining_amount" sum="Toplam"/>
                     <field name="last_entry_date"/>
                     <field name="date"/>
-                    <field name="paid_amount"/>
                     <field name="last_payment_date"/>
-                    <field name="remaining_amount"/>
                 </tree>
             </field>
         </record>
@@ -44,6 +44,7 @@
                                 <field name="line_ids">
                                     <tree editable="bottom">
                                         <field name="product_id"/>
+                                        <field name="name"/>
                                         <field name="quantity" sum="Toplam"/>
                                         <field name="price_unit" sum="Toplam" widget="monetary"
                                                options="{'currency_field': 'currency_id'}"/>

@@ -12,7 +12,7 @@
             <field name="margin_right">5</field>
         </record>
 
-        <report id="report_veresiye_receipt" model="veresiye.defteri"
+        <report id="action_report_veresiye_receipt" model="veresiye.defteri"
                 string="Veresiye Fişi" report_type="qweb-pdf"
                 name="veresiyedefteri.report_receipt"
                 file="veresiyedefteri.report_receipt"
@@ -29,6 +29,7 @@
                             <thead>
                                 <tr>
                                     <th>Ürün</th>
+                                    <th>Açıklama</th>
                                     <th>Adet</th>
                                     <th>Fiyat</th>
                                     <th>Tutar</th>
@@ -37,6 +38,7 @@
                             <tbody>
                                 <tr t-foreach="doc.line_ids" t-as="line">
                                     <td t-esc="line.product_id.display_name"/>
+                                    <td t-esc="line.name"/>
                                     <td t-esc="line.quantity"/>
                                     <td t-esc="line.price_unit"/>
                                     <td t-esc="line.subtotal"/>
