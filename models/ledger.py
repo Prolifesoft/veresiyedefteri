@@ -74,15 +74,15 @@ class VeresiyeDefteri(models.Model):
             record.last_entry_date = max(dates) if dates else False
 
     def print_receipt(self):
-        action = self.env.ref(
-            "invoice_pos_receipt_safe.fixed_pos_template",
-            raise_if_not_found=False,
+        """Print the ledger using the module's receipt report."""
+        report = self.env['ir.actions.report']._get_report_from_name(
+            'veresiyedefteri.report_receipt'
         )
-        if not action:
+        if not report:
             raise UserError(
-                "'invoice_pos_receipt_safe.fixed_pos_template' not found"
+                "'veresiyedefteri.report_receipt' report not found",
             )
-        return action.report_action(self)
+        return report.report_action(self)
 
     def action_open_payment_wizard(self):
         self.ensure_one()
@@ -93,6 +93,21 @@ class VeresiyeDefteri(models.Model):
             'view_mode': 'form',
             'target': 'new',
             'context': {'default_ledger_id': self.id},
+        }
+
+    def action_pay_all(self):
+        """Open payment wizard prefilled with remaining amount."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Tümünü Öde',
+            'res_model': 'veresiye.payment.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_ledger_id': self.id,
+                'default_amount': self.remaining_amount,
+            },
         }
 
     def action_save_and_close(self):

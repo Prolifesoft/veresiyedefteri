@@ -6,6 +6,7 @@
             <field name="arch" type="xml">
                 <form string="Ödeme Yap">
                     <group>
+                        <field name="remaining_amount" readonly="1"/>
                         <field name="amount"/>
                         <field name="payment_date"/>
                     </group>
