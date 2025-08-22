@@ -54,6 +54,15 @@
             </field>
         </record>
 
+        <!-- Action and Menus -->
+        <record id="action_veresiye_defteri" model="ir.actions.act_window">
+            <field name="name">Veresiye Kayıtları</field>
+            <field name="res_model">veresiye.defteri</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_veresiye_defteri_tree"/>
+        </record>
+
         <menuitem id="menu_veresiye_root" name="Veresiye Defteri"/>
+        <menuitem id="menu_veresiye_ledger" parent="menu_veresiye_root" action="action_veresiye_defteri"/>
     </data>
 </odoo>
