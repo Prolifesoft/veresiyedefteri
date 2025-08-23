@@ -33,14 +33,16 @@ class ResPartner(models.Model):
     def recompute_ledger_totals(self):
         data = self.env['ps.ledger.entry'].read_group(
             [('partner_id', 'in', self.ids)],
-            ['partner_id', 'total:sum'],
+            ['total:sum'],
             ['partner_id', 'type'],
+            lazy=False,
         )
         mapping = {pid: {'debt': 0.0, 'payment': 0.0} for pid in self.ids}
         for res in data:
             pid = res['partner_id'][0]
-            entry_type = res['type']
-            mapping[pid][entry_type] = res['total_sum']
+            entry_type = res.get('type')
+            if entry_type in mapping[pid]:
+                mapping[pid][entry_type] = res['total_sum']
         for partner in self:
             debt = mapping[partner.id]['debt']
             paid = mapping[partner.id]['payment']
