@@ -19,18 +19,18 @@
                                     <img t-att-src="kanban_image('res.partner', record.id.raw_value, 'image_128')"/>
                                 </div>
                                 <div class="oe_kanban_details">
-                                    <strong t-field="record.name"/>
-                                    <div t-if="record.phone.raw_value">
-                                        <span t-field="record.phone"/>
+                                    <strong><field name="name"/></strong>
+                                    <div t-if="record.phone">
+                                        <field name="phone"/>
                                     </div>
                                     <div>
-                                        Borç: <span t-field="record.veresiye_total_amount"/>
+                                        Borç: <field name="veresiye_total_amount"/>
                                     </div>
                                     <div>
-                                        Ödenen: <span t-field="record.veresiye_paid_amount"/>
+                                        Ödenen: <field name="veresiye_paid_amount"/>
                                     </div>
                                     <div>
-                                        Kalan: <span t-field="record.veresiye_remaining_amount"/>
+                                        Kalan: <field name="veresiye_remaining_amount"/>
                                     </div>
                                 </div>
                             </div>
