@@ -7,6 +7,8 @@
                 <tree editable="bottom">
                     <control>
                         <button name="print_receipt" type="object" string="Fiş Yazdır"/>
+                        <button type="action" name="%(base.action_import)d" string="Toplu İçe Aktar"/>
+                        <button type="action" name="%(base.action_export)d" string="Toplu Dışa Aktar"/>
                     </control>
                     <field name="date"/>
                     <field name="partner_id"/>
