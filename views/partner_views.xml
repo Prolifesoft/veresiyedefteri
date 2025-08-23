@@ -54,7 +54,6 @@
                                     <field name="total" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="date" string="Ödeme Tarihi"/>
                                     <field name="paid_amount" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="remaining_amount" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 </tree>
                             </field>
                         </page>
