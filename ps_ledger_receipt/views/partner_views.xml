@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record id="view_ps_partner_ledger_tree" model="ir.ui.view">
+            <field name="name">res.partner.ledger.tree</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="x_phone_display"/>
+                    <field name="x_ledger_total_debt" sum="Toplam"/>
+                    <field name="x_ledger_total_paid" sum="Toplam"/>
+                    <field name="x_ledger_balance" sum="Toplam"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

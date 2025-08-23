@@ -1,0 +1,67 @@
+<odoo>
+    <data>
+        <record id="view_ps_ledger_entry_tree" model="ir.ui.view">
+            <field name="name">ps.ledger.entry.tree</field>
+            <field name="model">ps.ledger.entry</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <control>
+                        <button name="print_receipt" type="object" string="Fiş Yazdır"/>
+                    </control>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="type"/>
+                    <field name="description"/>
+                    <field name="product_id"/>
+                    <field name="quantity" sum="Toplam"/>
+                    <field name="price_unit" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="subtotal" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="tax_percent"/>
+                    <field name="tax_amount" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="total" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="signed_total" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="due_date"/>
+                    <field name="payment_method"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_ps_ledger_entry_form" model="ir.ui.view">
+            <field name="name">ps.ledger.entry.form</field>
+            <field name="model">ps.ledger.entry</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_post" type="object" string="Onayla" states="draft" class="btn-primary"/>
+                        <button name="action_reset_draft" type="object" string="Taslağa Al" states="posted"/>
+                        <button name="print_receipt" type="object" string="Fiş Yazdır" class="btn-secondary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="date"/>
+                            <field name="type"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="price_unit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="tax_percent"/>
+                            <field name="subtotal" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="tax_amount" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="total" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="due_date" attrs="{'invisible':[('type','!=','debt')]}"/>
+                            <field name="payment_method" attrs="{'invisible':[('type','!=','payment')]}"/>
+                            <field name="pos_ref" attrs="{'invisible':[('payment_method','not in',('card','pos'))]}"/>
+                            <field name="installment_count" attrs="{'invisible':[('type','!=','payment')]}"/>
+                        </group>
+                        <field name="note"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

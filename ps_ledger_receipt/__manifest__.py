@@ -1,0 +1,23 @@
+{
+    'name': 'Veresiye Defteri (Fiş Yazdır)',
+    'version': '17.0.2.0.0',
+    'category': 'Accounting/Sales',
+    'summary': 'Müşteri veresiye takibi ve 80mm fiş yazdırma',
+    'author': 'Your Company',
+    'depends': ['base', 'contacts', 'account', 'web'],
+    'license': 'LGPL-3',
+    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'data/sequence_data.xml',
+        'views/menu_views.xml',
+        'views/partner_views.xml',
+        'views/ledger_views.xml',
+        'views/mass_collection_wizard_views.xml',
+        'views/import_wizard_views.xml',
+        'report/ledger_receipt_templates.xml',
+        'report/ledger_receipt_reports.xml',
+    ],
+    'installable': True,
+    'application': True,
+}

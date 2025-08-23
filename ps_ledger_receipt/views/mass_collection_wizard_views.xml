@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <record id="view_mass_collection_wizard" model="ir.ui.view">
+            <field name="name">ps.ledger.mass.collection.wizard.form</field>
+            <field name="model">ps.ledger.mass.collection.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Toplu Tahsilat">
+                    <group>
+                        <field name="partner_ids" widget="many2many_tags"/>
+                        <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="payment_method"/>
+                    </group>
+                    <footer>
+                        <button string="Onayla" name="action_confirm" type="object" class="btn-primary"/>
+                        <button string="Vazgeç" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

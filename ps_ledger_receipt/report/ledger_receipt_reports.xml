@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record id="paperformat_ps_ledger" model="report.paperformat">
+            <field name="name">80mm Fiş</field>
+            <field name="default" eval="False"/>
+            <field name="format">custom</field>
+            <field name="page_width">80</field>
+            <field name="page_height">297</field>
+            <field name="margin_top">2</field>
+            <field name="margin_bottom">2</field>
+            <field name="margin_left">2</field>
+            <field name="margin_right">2</field>
+        </record>
+        <report
+            id="action_report_ledger_receipt"
+            model="ps.ledger.entry"
+            string="Veresiye Fişi"
+            report_type="qweb-pdf"
+            name="ps_ledger_receipt.ledger_receipt_template"
+            file="ps_ledger_receipt.ledger_receipt_template"
+            paperformat="paperformat_ps_ledger"
+            print_report_name="'VERESIYE_FIS_' + object.name"
+        />
+    </data>
+</odoo>
