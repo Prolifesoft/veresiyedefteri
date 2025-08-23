@@ -73,7 +73,7 @@
             <field name="view_id" ref="view_veresiye_defteri_tree"/>
         </record>
 
-        <menuitem id="menu_veresiye_root" name="Veresiye Defteri"/>
+        <menuitem id="menu_veresiye_root" name="Veresiye Defteri" action="action_veresiye_partner"/>
         <menuitem id="menu_veresiye_ledger" parent="menu_veresiye_root" action="action_veresiye_defteri"/>
     </data>
 </odoo>

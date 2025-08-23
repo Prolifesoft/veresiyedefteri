@@ -1,5 +1,45 @@
 <odoo>
     <data>
+        <!-- Partner Kanban View -->
+        <record id="view_partner_veresiye_kanban" model="ir.ui.view">
+            <field name="name">res.partner.veresiye.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <kanban class="o_res_partner_kanban">
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="image_128"/>
+                    <field name="veresiye_total_amount"/>
+                    <field name="veresiye_paid_amount"/>
+                    <field name="veresiye_remaining_amount"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('res.partner', record.id.raw_value, 'image_128')"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong t-field="record.name"/>
+                                    <div t-if="record.phone.raw_value">
+                                        <span t-field="record.phone"/>
+                                    </div>
+                                    <div>
+                                        Borç: <span t-field="record.veresiye_total_amount"/>
+                                    </div>
+                                    <div>
+                                        Ödenen: <span t-field="record.veresiye_paid_amount"/>
+                                    </div>
+                                    <div>
+                                        Kalan: <span t-field="record.veresiye_remaining_amount"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <!-- Partner Tree View -->
         <record id="view_partner_veresiye_tree" model="ir.ui.view">
             <field name="name">res.partner.veresiye.tree</field>
@@ -42,14 +82,13 @@
             </field>
         </record>
 
-        <!-- Action and Menu -->
+        <!-- Action -->
         <record id="action_veresiye_partner" model="ir.actions.act_window">
             <field name="name">Müşteriler</field>
             <field name="res_model">res.partner</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_partner_veresiye_tree"/>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="view_partner_veresiye_kanban"/>
+            <field name="domain">[("veresiye_ledger_ids", "!=", False)]</field>
         </record>
-
-        <menuitem id="menu_veresiye_partner" parent="menu_veresiye_root" action="action_veresiye_partner"/>
     </data>
 </odoo>
