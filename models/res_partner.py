@@ -88,7 +88,9 @@ class ResPartner(models.Model):
         ).report_action(entries)
 
     def action_save(self):
-        return {'type': 'ir.actions.act_window_close'}
+        self.ensure_one()
+        action = self.env.ref('veresiyedefteri.action_ps_ledger_partner')
+        return action.read()[0]
 
     def action_delete(self):
         self.unlink()
