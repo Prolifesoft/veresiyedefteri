@@ -18,7 +18,8 @@ class ResPartner(models.Model):
         string='Kalan', currency_field='currency_id', store=True, default=0.0
     )
     x_last_payment_date = fields.Date(
-        string='Ödeme Tarihi', store=True
+        string='Ödeme Tarihi',
+        compute='_compute_last_payment_date',
     )
     x_phone_display = fields.Char(
         string='Telefon', compute='_compute_phone_display', store=True
@@ -49,15 +50,6 @@ class ResPartner(models.Model):
             if entry_type in mapping[pid]:
                 mapping[pid][entry_type] = total
 
-        payment_dates = self.env['ps.ledger.entry'].read_group(
-            [('partner_id', 'in', self.ids), ('type', '=', 'payment')],
-            ['date:max'], ['partner_id'], lazy=False
-        )
-        date_map = {
-            res['partner_id'][0]: res['date_max']
-            for res in payment_dates
-        }
-
         for partner in self:
             debt = mapping[partner.id]['debt']
             paid = mapping[partner.id]['payment']
@@ -65,8 +57,20 @@ class ResPartner(models.Model):
                 'x_ledger_total_debt': debt,
                 'x_ledger_total_paid': paid,
                 'x_ledger_balance': debt - paid,
-                'x_last_payment_date': date_map.get(partner.id),
             })
+
+    @api.depends('ledger_entry_ids.date', 'ledger_entry_ids.type')
+    def _compute_last_payment_date(self):
+        payment_dates = self.env['ps.ledger.entry'].read_group(
+            [('partner_id', 'in', self.ids), ('type', '=', 'payment')],
+            ['date:max'], ['partner_id'], lazy=False,
+        )
+        date_map = {
+            res['partner_id'][0]: res['date_max']
+            for res in payment_dates
+        }
+        for partner in self:
+            partner.x_last_payment_date = date_map.get(partner.id)
 
     def action_add_payment(self):
         self.ensure_one()
