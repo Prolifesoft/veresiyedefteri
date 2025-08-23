@@ -11,6 +11,7 @@
                     <field name="date"/>
                     <field name="partner_id"/>
                     <field name="type"/>
+                    <field name="currency_id" invisible="1"/>
                     <field name="description"/>
                     <field name="product_id"/>
                     <field name="quantity" sum="Toplam"/>
