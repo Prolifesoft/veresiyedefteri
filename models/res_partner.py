@@ -20,6 +20,7 @@ class ResPartner(models.Model):
     x_last_payment_date = fields.Date(
         string='Ödeme Tarihi',
         compute='_compute_last_payment_date',
+        store=True,
     )
     x_phone_display = fields.Char(
         string='Telefon', compute='_compute_phone_display', store=True
