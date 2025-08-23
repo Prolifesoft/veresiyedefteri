@@ -41,8 +41,9 @@ class ResPartner(models.Model):
         for res in data:
             pid = res['partner_id'][0]
             entry_type = res.get('type')
+            total = res.get('total_sum', res.get('total', 0.0))
             if entry_type in mapping[pid]:
-                mapping[pid][entry_type] = res['total_sum']
+                mapping[pid][entry_type] = total
         for partner in self:
             debt = mapping[partner.id]['debt']
             paid = mapping[partner.id]['payment']
