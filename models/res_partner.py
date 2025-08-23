@@ -7,6 +7,9 @@ class ResPartner(models.Model):
     veresiye_ledger_ids = fields.One2many(
         'veresiye.defteri', 'partner_id', string='Veresiye Defteri'
     )
+    veresiye_line_ids = fields.One2many(
+        'veresiye.defteri.line', 'partner_id', string='Veresiye Satırları'
+    )
     currency_id = fields.Many2one(
         'res.currency', related='company_id.currency_id', readonly=True
     )

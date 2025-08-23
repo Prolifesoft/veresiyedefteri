@@ -153,6 +153,19 @@ class VeresiyeDefteriLine(models.Model):
         group_operator='sum',
         currency_field='currency_id',
     )
+    remaining_amount = fields.Monetary(
+        compute='_compute_remaining_line',
+        store=True,
+        string='Kalan',
+        group_operator='sum',
+        currency_field='currency_id',
+    )
+    partner_id = fields.Many2one(
+        'res.partner',
+        related='ledger_id.partner_id',
+        store=True,
+        string='Müşteri',
+    )
     currency_id = fields.Many2one(
         'res.currency', related='ledger_id.currency_id', store=True
     )
@@ -168,3 +181,8 @@ class VeresiyeDefteriLine(models.Model):
     def _compute_subtotal(self):
         for line in self:
             line.subtotal = line.quantity * line.price_unit
+
+    @api.depends('subtotal', 'paid_amount')
+    def _compute_remaining_line(self):
+        for line in self:
+            line.remaining_amount = line.subtotal - line.paid_amount
