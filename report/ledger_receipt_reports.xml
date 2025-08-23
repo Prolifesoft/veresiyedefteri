@@ -16,8 +16,8 @@
             model="ps.ledger.entry"
             string="Veresiye Fişi"
             report_type="qweb-pdf"
-            name="ps_ledger_receipt.ledger_receipt_template"
-            file="ps_ledger_receipt.ledger_receipt_template"
+            name="veresiyedefteri.ledger_receipt_template"
+            file="veresiyedefteri.ledger_receipt_template"
             paperformat="paperformat_ps_ledger"
             print_report_name="'VERESIYE_FIS_' + object.name"
         />
