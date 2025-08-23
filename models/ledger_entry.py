@@ -57,6 +57,12 @@ class LedgerEntry(models.Model):
         store=True,
         currency_field='currency_id',
     )
+    paid_amount = fields.Monetary(
+        string='Ödenen',
+        compute='_compute_amounts',
+        store=True,
+        currency_field='currency_id',
+    )
 
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.company.currency_id
@@ -103,6 +109,13 @@ class LedgerEntry(models.Model):
             rec.signed_total = (
                 rec.total if rec.type == 'debt' else -abs(rec.total)
             )
+            rec.paid_amount = rec.total if rec.type == 'payment' else 0.0
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.price_unit = self.product_id.list_price
+            self.description = self.product_id.display_name
 
     @api.model_create_multi
     def create(self, vals_list):

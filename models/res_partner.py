@@ -19,6 +19,11 @@ class ResPartner(models.Model):
     x_phone_display = fields.Char(
         string='Telefon', compute='_compute_phone_display', store=True
     )
+    ledger_entry_ids = fields.One2many(
+        'ps.ledger.entry',
+        'partner_id',
+        string='Veresiye Satırları',
+    )
 
     @api.depends('phone', 'mobile')
     def _compute_phone_display(self):
@@ -44,3 +49,33 @@ class ResPartner(models.Model):
                 'x_ledger_total_paid': paid,
                 'x_ledger_balance': debt - paid,
             })
+
+    def action_add_payment(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Ödeme Yap',
+            'res_model': 'ps.ledger.entry',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_partner_id': self.id,
+                'default_type': 'payment',
+            },
+        }
+
+    def action_print_ledger(self):
+        self.ensure_one()
+        entries = self.env['ps.ledger.entry'].search([
+            ('partner_id', '=', self.id)
+        ])
+        return self.env.ref(
+            'veresiyedefteri.action_report_ledger_receipt'
+        ).report_action(entries)
+
+    def action_save(self):
+        return {'type': 'ir.actions.act_window_close'}
+
+    def action_delete(self):
+        self.unlink()
+        return {'type': 'ir.actions.act_window_close'}
