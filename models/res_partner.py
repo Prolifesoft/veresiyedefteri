@@ -118,3 +118,14 @@ class ResPartner(models.Model):
     def action_delete(self):
         self.unlink()
         return {'type': 'ir.actions.act_window_close'}
+
+    def action_view_ledger(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Veresiye Satırları',
+            'res_model': 'ps.ledger.entry',
+            'view_mode': 'tree,form',
+            'domain': [('partner_id', '=', self.id)],
+            'context': {'default_partner_id': self.id},
+        }
