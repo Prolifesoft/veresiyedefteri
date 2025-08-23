@@ -19,13 +19,11 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//form" position="inside">
-                    <header>
-                        <button name="action_add_payment" type="object" string="Ödeme Yap" class="btn-primary"/>
-                        <button name="action_print_ledger" type="object" string="Yazdır"/>
-                        <button name="action_delete" type="object" string="Sil" class="btn-danger"/>
-                        <button name="action_save" type="object" string="Kaydet"/>
-                    </header>
+                <xpath expr="//form/header" position="inside">
+                    <button name="action_add_payment" type="object" string="Ödeme Yap" class="btn-primary"/>
+                    <button name="action_print_ledger" type="object" string="Yazdır"/>
+                    <button name="action_delete" type="object" string="Sil" class="btn-danger"/>
+                    <button name="action_save" type="object" string="Kaydet"/>
                 </xpath>
                 <xpath expr="//form/sheet/notebook" position="replace">
                     <notebook>
@@ -58,6 +56,10 @@
                             </group>
                         </page>
                     </notebook>
+                </xpath>
+                <xpath expr="//form/sheet/notebook" position="after">
+                    <field name="duplicated_bank_account_partners_count" invisible="1"/>
+                    <field name="same_vat_partner_id" invisible="1"/>
                 </xpath>
             </field>
         </record>
