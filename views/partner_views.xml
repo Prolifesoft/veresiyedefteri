@@ -30,6 +30,7 @@
                 <xpath expr="//form/sheet" position="inside">
                     <field name="duplicated_bank_account_partners_count" invisible="1"/>
                     <field name="same_vat_partner_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                 </xpath>
                 
                 <xpath expr="//form/sheet/notebook" position="replace">
