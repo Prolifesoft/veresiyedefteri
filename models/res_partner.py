@@ -58,12 +58,23 @@ class ResPartner(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Ödeme Yap',
-            'res_model': 'ps.ledger.entry',
+            'res_model': 'ps.ledger.payment.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_partner_id': self.id},
+        }
+
+    def action_pay_full(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Tümünü Öde',
+            'res_model': 'ps.ledger.payment.wizard',
             'view_mode': 'form',
             'target': 'new',
             'context': {
                 'default_partner_id': self.id,
-                'default_type': 'payment',
+                'default_amount': self.x_ledger_balance,
             },
         }
 
@@ -73,7 +84,7 @@ class ResPartner(models.Model):
             ('partner_id', '=', self.id)
         ])
         return self.env.ref(
-            'veresiyedefteri.action_report_ledger_receipt'
+            'veresiyedefteri.action_report_veresiye_receipt'
         ).report_action(entries)
 
     def action_save(self):

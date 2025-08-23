@@ -147,5 +147,5 @@ class LedgerEntry(models.Model):
 
     def print_receipt(self):
         return self.env.ref(
-            'veresiyedefteri.action_report_ledger_receipt'
+            'veresiyedefteri.action_report_veresiye_receipt'
         ).report_action(self)

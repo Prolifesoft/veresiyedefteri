@@ -22,6 +22,7 @@
                 <xpath expr="//form/sheet" position="before">
                     <header>
                         <button name="action_add_payment" type="object" string="Ödeme Yap" class="btn-primary"/>
+                        <button name="action_pay_full" type="object" string="Tümünü Öde"/>
                         <button name="action_print_ledger" type="object" string="Yazdır"/>
                         <button name="action_delete" type="object" string="Sil" class="btn-danger"/>
                         <button name="action_save" type="object" string="Kaydet"/>
@@ -40,11 +41,11 @@
                                 <tree editable="bottom">
                                     <field name="product_id"/>
                                     <field name="description"/>
-                                    <field name="quantity"/>
-                                    <field name="price_unit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="subtotal" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="quantity" sum="Toplam"/>
+                                    <field name="price_unit" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="subtotal" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="date"/>
-                                    <field name="paid_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="paid_amount" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 </tree>
                             </field>
                         </page>

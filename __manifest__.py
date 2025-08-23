@@ -15,6 +15,7 @@
         'views/ledger_views.xml',
         'views/mass_collection_wizard_views.xml',
         'views/import_wizard_views.xml',
+        'views/payment_wizard_views.xml',
         'report/ledger_receipt_templates.xml',
         'report/ledger_receipt_reports.xml',
     ],

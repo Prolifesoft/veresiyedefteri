@@ -12,7 +12,7 @@
             <field name="margin_right">2</field>
         </record>
         <report
-            id="action_report_ledger_receipt"
+            id="action_report_veresiye_receipt"
             model="ps.ledger.entry"
             string="Veresiye Fişi"
             report_type="qweb-pdf"
