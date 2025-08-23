@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class ResPartner(models.Model):
@@ -15,6 +16,9 @@ class ResPartner(models.Model):
     )
     x_ledger_balance = fields.Monetary(
         string='Kalan', currency_field='currency_id', store=True, default=0.0
+    )
+    x_last_payment_date = fields.Date(
+        string='Ödeme Tarihi', store=True
     )
     x_phone_display = fields.Char(
         string='Telefon', compute='_compute_phone_display', store=True
@@ -44,6 +48,16 @@ class ResPartner(models.Model):
             total = res.get('total_sum', res.get('total', 0.0))
             if entry_type in mapping[pid]:
                 mapping[pid][entry_type] = total
+
+        payment_dates = self.env['ps.ledger.entry'].read_group(
+            [('partner_id', 'in', self.ids), ('type', '=', 'payment')],
+            ['date:max'], ['partner_id'], lazy=False
+        )
+        date_map = {
+            res['partner_id'][0]: res['date_max']
+            for res in payment_dates
+        }
+
         for partner in self:
             debt = mapping[partner.id]['debt']
             paid = mapping[partner.id]['payment']
@@ -51,6 +65,7 @@ class ResPartner(models.Model):
                 'x_ledger_total_debt': debt,
                 'x_ledger_total_paid': paid,
                 'x_ledger_balance': debt - paid,
+                'x_last_payment_date': date_map.get(partner.id),
             })
 
     def action_add_payment(self):
@@ -83,9 +98,12 @@ class ResPartner(models.Model):
         entries = self.env['ps.ledger.entry'].search([
             ('partner_id', '=', self.id)
         ])
-        return self.env.ref(
-            'veresiyedefteri.action_report_veresiye_receipt'
-        ).report_action(entries)
+        action = self.env.ref(
+            'veresiyedefteri.action_report_veresiye_receipt', False
+        )
+        if not action:
+            raise UserError('Fiş raporu bulunamadı, modülü güncelleyin.')
+        return action.report_action(entries)
 
     def action_save(self):
         self.ensure_one()

@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class LedgerEntry(models.Model):
@@ -63,6 +64,12 @@ class LedgerEntry(models.Model):
         store=True,
         currency_field='currency_id',
     )
+    remaining_amount = fields.Monetary(
+        string='Kalan',
+        compute='_compute_amounts',
+        store=True,
+        currency_field='currency_id',
+    )
 
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.company.currency_id
@@ -110,6 +117,7 @@ class LedgerEntry(models.Model):
                 rec.total if rec.type == 'debt' else -abs(rec.total)
             )
             rec.paid_amount = rec.total if rec.type == 'payment' else 0.0
+            rec.remaining_amount = rec.total - rec.paid_amount
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -146,6 +154,9 @@ class LedgerEntry(models.Model):
         self.write({'state': 'draft'})
 
     def print_receipt(self):
-        return self.env.ref(
-            'veresiyedefteri.action_report_veresiye_receipt'
-        ).report_action(self)
+        action = self.env.ref(
+            'veresiyedefteri.action_report_veresiye_receipt', False
+        )
+        if not action:
+            raise UserError('Fiş raporu bulunamadı, modülü güncelleyin.')
+        return action.report_action(self)

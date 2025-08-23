@@ -10,6 +10,7 @@
                     <field name="x_ledger_total_debt" sum="Toplam"/>
                     <field name="x_ledger_total_paid" sum="Toplam"/>
                     <field name="x_ledger_balance" sum="Toplam"/>
+                    <field name="x_last_payment_date"/>
                 </tree>
             </field>
         </record>
@@ -32,6 +33,12 @@
                     <field name="duplicated_bank_account_partners_count" invisible="1"/>
                     <field name="same_vat_partner_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
+                    <group>
+                        <field name="x_ledger_total_debt" readonly="1"/>
+                        <field name="x_ledger_total_paid" readonly="1"/>
+                        <field name="x_ledger_balance" readonly="1"/>
+                        <field name="x_last_payment_date" readonly="1"/>
+                    </group>
                 </xpath>
                 
                 <xpath expr="//form/sheet/notebook" position="replace">
@@ -44,8 +51,10 @@
                                     <field name="quantity" sum="Toplam"/>
                                     <field name="price_unit" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="subtotal" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="date"/>
+                                    <field name="total" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="date" string="Ödeme Tarihi"/>
                                     <field name="paid_amount" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="remaining_amount" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 </tree>
                             </field>
                         </page>
