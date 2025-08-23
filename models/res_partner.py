@@ -67,7 +67,7 @@ class ResPartner(models.Model):
             ['date:max'], ['partner_id'], lazy=False,
         )
         date_map = {
-            res['partner_id'][0]: res['date_max']
+            res['partner_id'][0]: res.get('date_max')
             for res in payment_dates
         }
         for partner in self:
