@@ -33,8 +33,8 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="action_post" type="object" string="Onayla" states="draft" class="btn-primary"/>
-                        <button name="action_reset_draft" type="object" string="Taslağa Al" states="posted"/>
+                        <button name="action_post" type="object" string="Onayla" class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_reset_draft" type="object" string="Taslağa Al" invisible="state != 'posted'"/>
                         <button name="print_receipt" type="object" string="Fiş Yazdır" class="btn-secondary"/>
                     </header>
                     <sheet>
@@ -53,10 +53,10 @@
                             <field name="subtotal" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="tax_amount" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="total" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="due_date" attrs="{'invisible':[('type','!=','debt')]}"/>
-                            <field name="payment_method" attrs="{'invisible':[('type','!=','payment')]}"/>
-                            <field name="pos_ref" attrs="{'invisible':[('payment_method','not in',('card','pos'))]}"/>
-                            <field name="installment_count" attrs="{'invisible':[('type','!=','payment')]}"/>
+                            <field name="due_date" invisible="type != 'debt'"/>
+                            <field name="payment_method" invisible="type != 'payment'"/>
+                            <field name="pos_ref" invisible="payment_method not in ['card', 'pos']"/>
+                            <field name="installment_count" invisible="type != 'payment'"/>
                         </group>
                         <field name="note"/>
                     </sheet>
