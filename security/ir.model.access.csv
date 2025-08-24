@@ -1,4 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_veresiye_defteri,access.veresiye.defteri,model_veresiye_defteri,base.group_user,1,1,1,1
-access_veresiye_defteri_line,access.veresiye.defteri.line,model_veresiye_defteri_line,base.group_user,1,1,1,1
-access_veresiye_payment_wizard,access.veresiye.payment.wizard,model_veresiye_payment_wizard,base.group_user,1,1,1,1
+access_ps_ledger_entry,access.ps.ledger.entry,model_ps_ledger_entry,base.group_user,1,1,1,1
