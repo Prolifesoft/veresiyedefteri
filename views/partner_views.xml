@@ -73,8 +73,9 @@
                                     <field name="price_unit" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="subtotal" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="total" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="date" string="Ödeme Tarihi"/>
                                     <field name="paid_amount" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="remaining_amount" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="date" string="Ödeme Tarihi"/>
                                 </tree>
                             </field>
                         </page>
