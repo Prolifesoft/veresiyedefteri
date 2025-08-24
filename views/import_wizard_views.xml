@@ -1,0 +1,20 @@
+<odoo>
+    <data>
+        <record id="view_ledger_import_wizard" model="ir.ui.view">
+            <field name="name">ps.ledger.import.wizard.form</field>
+            <field name="model">ps.ledger.import.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Veresiye İçe Aktar">
+                    <group>
+                        <field name="data_file" filename="filename"/>
+                        <field name="filename" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button string="İçe Aktar" name="action_import" type="object" class="btn-primary"/>
+                        <button string="Vazgeç" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
