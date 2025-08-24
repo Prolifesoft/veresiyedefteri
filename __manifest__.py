@@ -4,7 +4,13 @@
     'category': 'Accounting/Sales',
     'summary': 'Müşteri veresiye takibi ve 80mm fiş yazdırma',
     'author': 'Your Company',
-    'depends': ['base', 'contacts', 'account', 'web'],
+    'depends': [
+        'base',
+        'contacts',
+        'account',
+        'web',
+        'invoice_pos_receipt_safe',
+    ],
     'license': 'LGPL-3',
     'data': [
         'security/security.xml',
@@ -16,7 +22,6 @@
         'views/mass_collection_wizard_views.xml',
         'views/import_wizard_views.xml',
         'views/payment_wizard_views.xml',
-        'report/ledger_receipt_templates.xml',
         'report/ledger_receipt_reports.xml',
     ],
     'installable': True,
