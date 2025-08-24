@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class VeresiyeDefteri(models.Model):
@@ -48,9 +49,26 @@ class VeresiyeDefteri(models.Model):
             record.last_entry_date = max(dates) if dates else False
 
     def print_receipt(self):
-        action = self.env.ref(
-            "veresiyedefteri.action_report_veresiye_receipt"
-        )
+        """Print receipt using the configured report action.
+
+        Older installs might still reference the legacy
+        ``veresiyedefteri.report_veresiye_receipt`` ID.  To be
+        backwards‑compatible we try both IDs before raising a
+        user‑friendly error.
+        """
+        try:
+            action = self.env.ref(
+                "veresiyedefteri.action_report_veresiye_receipt"
+            )
+        except ValueError:
+            try:
+                action = self.env.ref(
+                    "veresiyedefteri.report_veresiye_receipt"
+                )
+            except ValueError as err:
+                raise UserError(
+                    "Fiş raporu bulunamadı, modülü güncelleyin."
+                ) from err
         return action.report_action(self)
 
     def action_open_payment_wizard(self):
