@@ -165,8 +165,13 @@ class LedgerEntry(models.Model):
             action = self.env.ref(
                 'veresiyedefteri.action_report_veresiye_receipt'
             )
-        except ValueError as err:
-            raise UserError(
-                'Fiş raporu bulunamadı, modülü güncelleyin.'
-            ) from err
+        except ValueError:
+            try:
+                action = self.env.ref(
+                    'veresiyedefteri.report_veresiye_receipt'
+                )
+            except ValueError as err:
+                raise UserError(
+                    'Fiş raporu bulunamadı, modülü güncelleyin.'
+                ) from err
         return action.report_action(self)
