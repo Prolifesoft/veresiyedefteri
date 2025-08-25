@@ -270,7 +270,6 @@ class ResPartner(models.Model):
         'res.currency',
         string='Para Birimi',
         related='company_id.currency_id',
-        store=True,
         readonly=True,
     )
 
