@@ -84,9 +84,9 @@
                             </div>
 
                             <!-- Ödemeler Listesi -->
-                            <group string="Ödemeler" invisible="not payment_ids">
+                            <group string="Ödemeler" colspan="4">
                                 <field name="payment_ids" nolabel="1">
-                                    <tree>
+                                    <tree editable="bottom" create="1" edit="1" delete="1">
                                         <field name="date"/>
                                         <field name="amount" widget="monetary"/>
                                         <field name="note"/>
