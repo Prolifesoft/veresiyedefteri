@@ -123,6 +123,7 @@ class VeresiyeLedger(models.Model):
 
     def action_add_payment(self):
         """Ödeme sihirbazını aç"""
+        self.ensure_one()
         return {
             'name': 'Ödeme Yap',
             'type': 'ir.actions.act_window',
@@ -137,13 +138,14 @@ class VeresiyeLedger(models.Model):
 
     def action_pay_all(self):
         """Tümünü öde"""
-        if self.amount_due > 0:
-            self.env['veresiye.payment'].create({
-                'ledger_id': self.id,
-                'date': fields.Date.today(),
-                'amount': self.amount_due,
-                'note': 'Tam ödeme'
-            })
+        for record in self:
+            if record.amount_due > 0:
+                self.env['veresiye.payment'].create({
+                    'ledger_id': record.id,
+                    'date': fields.Date.today(),
+                    'amount': record.amount_due,
+                    'note': 'Tam ödeme'
+                })
         return True
 
 

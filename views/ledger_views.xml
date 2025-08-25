@@ -149,7 +149,16 @@
         <field name="binding_model_id" ref="model_veresiye_ledger"/>
         <field name="binding_type">action</field>
         <field name="state">code</field>
-        <field name="code">action = records.action_add_payment()</field>
+        <field name="code">records.ensure_one(); action = records.action_add_payment()</field>
+    </record>
+
+    <record id="action_veresiye_ledger_pay_all_multi" model="ir.actions.server">
+        <field name="name">Tümünü Öde</field>
+        <field name="model_id" ref="model_veresiye_ledger"/>
+        <field name="binding_model_id" ref="model_veresiye_ledger"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">records.action_pay_all()</field>
     </record>
 
     <record id="action_veresiye_ledger_print_receipt_multi" model="ir.actions.server">
