@@ -76,9 +76,9 @@
                             <div class="oe_clear">
                                 <div class="float-right">
                                     <button name="action_add_payment" string="Ödeme Yap" type="object"
-                                            class="btn-secondary" attrs="{'invisible': [('amount_due', '<=', 0)]}"/>
+                                            class="btn-secondary" attrs="{'invisible': [('amount_due', '&lt;=', 0)]}"/>
                                     <button name="action_pay_all" string="Tümünü Öde" type="object"
-                                            class="btn-primary" attrs="{'invisible': [('amount_due', '<=', 0)]}"/>
+                                            class="btn-primary" attrs="{'invisible': [('amount_due', '&lt;=', 0)]}"/>
                                 </div>
                             </div>
 
