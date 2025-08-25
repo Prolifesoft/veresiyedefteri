@@ -23,6 +23,7 @@
         'views/import_wizard_views.xml',
         'views/payment_wizard_views.xml',
         'report/ledger_receipt_reports.xml',
+        'report/legacy_report_alias.xml',
     ],
     'installable': True,
     'application': True,
