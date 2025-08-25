@@ -15,18 +15,13 @@
             id="action_report_veresiye_receipt"
             model="ps.ledger.entry"
             string="Veresiye Fişi"
-            report_type="qweb-html"
+            report_type="qweb-pdf"
             name="invoice_pos_receipt_safe.fixed_pos_template"
             file="invoice_pos_receipt_safe.fixed_pos_template"
             paperformat="paperformat_ps_ledger"
             print_report_name="'VERESIYE_FIS_' + object.name"
+            binding_model="ps.ledger.entry"
+            binding_type="report"
         />
-        <!-- Legacy external ID for backward compatibility -->
-        <record id="report_veresiye_receipt" model="ir.model.data">
-            <field name="name">report_veresiye_receipt</field>
-            <field name="model">ir.actions.report</field>
-            <field name="module">veresiyedefteri</field>
-            <field name="res_id" ref="action_report_veresiye_receipt"/>
-        </record>
     </data>
 </odoo>
