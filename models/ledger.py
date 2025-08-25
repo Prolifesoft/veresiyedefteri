@@ -33,6 +33,8 @@ class VeresiyeLedger(models.Model):
         index=True,
         help='Fiş tarihi'
     )
+    company_id = fields.Many2one('res.company', string='Şirket', required=True, readonly=True, index=True, default=lambda self: self.env.company)
+
 
     state = fields.Selection([
         ('draft', 'Taslak'),
@@ -80,12 +82,7 @@ class VeresiyeLedger(models.Model):
         help='Kalan borç tutarı'
     )
 
-    currency_id = fields.Many2one(
-        'res.currency',
-        string='Para Birimi',
-        default=lambda self: self.env.company.currency_id,
-        help='Para birimi'
-    )
+    currency_id = fields.Many2one('res.currency', string='Para Birimi', related='company_id.currency_id', store=True, readonly=True, help='Para birimi')
 
     notes = fields.Text(
         string='Notlar',
@@ -292,7 +289,7 @@ class ResPartner(models.Model):
     def _compute_veresiye_stats(self):
         """Veresiye istatistiklerini hesapla"""
         ledger_data = self.env['veresiye.ledger'].read_group(
-            domain=[('partner_id', 'in', self.ids)],
+            domain=[('partner_id', 'in', self.ids), ('company_id', '=', self.env.company.id)],
             fields=['partner_id', 'amount_total', 'amount_paid', 'amount_due'],
             groupby=['partner_id']
         )
