@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_invoice_fixed_html" model="ir.actions.report">
+            <field name="name">POS Fiş (Fixed)</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">prolifesoft_veresiye_defteri.fixed_pos_template</field>
+            <field name="report_file">prolifesoft_veresiye_defteri.fixed_pos_template</field>
+            <field name="print_report_name">'POS Fis - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="fixed_pos_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page" style="width:72mm; font-size:10px; font-family:Arial, sans-serif; margin:0; padding:3mm; line-height:1.2;">
+                        <style>
+                            @media print {
+                                @page { size: 72mm auto; margin: 0; }
+                                body { margin: 0; }
+                            }
+                            .center { text-align: center; }
+                            .right { text-align: right; }
+                            .bold { font-weight: bold; }
+                            .border-dashed { border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 8px; }
+                            .border-solid { border-top: 2px solid #000; padding-top: 5px; margin-top: 8px; }
+                            table { width: 100%; border-collapse: collapse; font-size: 8px; }
+                            th { border-bottom: 1px solid #000; padding: 2px; text-align: left; }
+                            td { padding: 2px 2px; }
+                        </style>
+
+                        <div class="center" style="margin-bottom: 8px;">
+                            <img src="/web/image?model=res.company&amp;field=appbar_image&amp;id=1" style="max-width: 100px; height: auto; display: block; margin: 0 auto;"/>
+                        </div>
+
+                        <div class="center border-dashed">
+                            <div class="bold" style="font-size: 12px;">Aktan Oto Yedek Parca</div>
+                            <div>Aykosan Sanayi Sitesi, Blok No:295</div>
+                            <div>Basaksehir / Istanbul</div>
+                            <div>Tel: 0 551 194 61 68</div>
+                            <div>Email: aktanotoyedekparca@gmail.com</div>
+                        </div>
+
+                        <div class="center bold" style="font-size: 12px; margin-bottom: 8px;">FATURA</div>
+
+                        <div style="margin-bottom: 8px;">
+                            <div><span class="bold">Fatura No:</span> <span t-esc="o.name"/></div>
+                            <div><span class="bold">Tarih:</span> <span t-esc="o.invoice_date"/></div>
+                            <div><span class="bold">Musteri:</span> <span t-esc="o.partner_id.name"/></div>
+                        </div>
+
+                        <table>
+                            <tr>
+                                <th style="width: 65%;">Urun</th>
+                                <th style="text-align: center; width: 15%;">Adet</th>
+                                <th style="text-align: right; width: 20%;">Tutar</th>
+                            </tr>
+                            <tr t-foreach="o.invoice_line_ids" t-as="line">
+                                <td style="width: 65%;"><span t-esc="line.name"/></td>
+                                <td style="text-align: center; width: 15%;"><span t-esc="line.quantity"/></td>
+                                <td style="text-align: right; width: 20%;"><span t-esc="line.price_subtotal"/> TL</td>
+                            </tr>
+                        </table>
+
+                        <div class="border-solid right">
+                            <div>ARA TOPLAM: <span class="bold"><span t-esc="o.amount_untaxed"/> TL</span></div>
+                            <div>KDV: <span class="bold"><span t-esc="o.amount_tax"/> TL</span></div>
+                            <div class="bold" style="font-size: 11px;">TOPLAM: <span t-esc="o.amount_total"/> TL</div>
+                        </div>
+
+                        <div class="center" style="margin-top: 10px;">
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
