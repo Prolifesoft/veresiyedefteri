@@ -16,8 +16,7 @@
 
             <!-- Rozetler - Category ID'den sonra ekle -->
             <field name="category_id" position="after">
-                <group string="Veresiye Durumu" colspan="4"
-                       attrs="{'invisible': [('veresiye_count', '=', 0)]}">
+                <group string="Veresiye Durumu" colspan="4" invisible="veresiye_count == 0">
                     <div class="o_row">
                         <span class="badge badge-pill badge-info">
                             Toplam: <field name="veresiye_total" widget="monetary" nolabel="1"/>
