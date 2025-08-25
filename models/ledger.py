@@ -6,6 +6,7 @@ class VeresiyeLedger(models.Model):
     """Veresiye Fiş (Header)"""
     _name = 'veresiye.ledger'
     _description = 'Veresiye Defteri Fişi'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc, name desc'
     _rec_name = 'name'
 
@@ -37,7 +38,11 @@ class VeresiyeLedger(models.Model):
         ('draft', 'Taslak'),
         ('posted', 'Onaylandı'),
         ('cancelled', 'İptal Edildi'),
-    ], string='Durum', default='draft', help='Fiş durumu (sadece görsel)')
+    ],
+        string='Durum',
+        default='draft',
+        tracking=True,
+        help='Fiş durumu (sadece görsel)')
 
     line_ids = fields.One2many(
         'veresiye.ledger.line',

@@ -17,7 +17,7 @@
     'author': 'ProlifeSoft',
     'website': 'https://www.prolifesoft.com',
     'license': 'Other OSI approved licence',
-    'depends': ['base', 'product'],
+    'depends': ['base', 'product', 'mail'],
     'data': [
         # Security
         'security/ir.model.access.csv',
