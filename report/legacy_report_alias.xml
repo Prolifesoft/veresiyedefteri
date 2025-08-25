@@ -1,8 +1,10 @@
 <odoo>
-    <record id="report_veresiye_receipt" model="ir.model.data" noupdate="1">
-        <field name="name">report_veresiye_receipt</field>
-        <field name="model">ir.actions.report</field>
-        <field name="module">veresiyedefteri</field>
-        <field name="res_id" ref="action_report_veresiye_receipt"/>
-    </record>
+    <data>
+        <record id="report_veresiye_receipt" model="ir.model.data" noupdate="1">
+            <field name="name">report_veresiye_receipt</field>
+            <field name="model">ir.actions.report</field>
+            <field name="module">veresiyedefteri</field>
+            <field name="res_id" ref="action_report_veresiye_receipt"/>
+        </record>
+    </data>
 </odoo>
