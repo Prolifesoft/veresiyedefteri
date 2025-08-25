@@ -26,7 +26,7 @@
             <field name="name">report_veresiye_receipt</field>
             <field name="model">ir.actions.report</field>
             <field name="module">veresiyedefteri</field>
-            <field name="res_id" ref="action_report_veresiye_receipt"/>
+            <field name="res_id" eval="env.ref('veresiyedefteri.action_report_veresiye_receipt').id"/>
         </record>
     </data>
 </odoo>
