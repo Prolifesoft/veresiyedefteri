@@ -4,12 +4,13 @@
         <record id="action_report_invoice_fixed_html" model="ir.actions.report">
             <field name="name">POS Fiş (Fixed)</field>
             <field name="model">account.move</field>
-            <field name="report_type">qweb-html</field>
+            <field name="report_type">qweb-pdf</field>
             <field name="report_name">prolifesoft_veresiye_defteri.fixed_pos_template</field>
             <field name="report_file">prolifesoft_veresiye_defteri.fixed_pos_template</field>
             <field name="print_report_name">'POS Fis - %s' % (object.name)</field>
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_type">report</field>
+            <field name="binding_view_types">form</field>
         </record>
 
         <template id="fixed_pos_template">
