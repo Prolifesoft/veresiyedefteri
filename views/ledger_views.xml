@@ -37,7 +37,7 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(action_report_veresiye_receipt)d" type="action"
+                        <button name="%(prolifesoft_veresiye_defteri.action_report_veresiye_receipt)d" type="action"
                                 string="Fiş Yazdır" class="oe_stat_button" icon="fa-print"/>
                     </div>
 
