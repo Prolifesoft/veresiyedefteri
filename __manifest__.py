@@ -16,7 +16,7 @@
     """,
     'author': 'ProlifeSoft',
     'website': 'https://www.prolifesoft.com',
-    'license': 'MIT',
+    'license': 'Other OSI approved licence',
     'depends': ['base', 'product'],
     'data': [
         # Security
