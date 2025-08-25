@@ -266,6 +266,14 @@ class ResPartner(models.Model):
     """Partner modeli genişletmesi - smart button ve rozetler için"""
     _inherit = 'res.partner'
 
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Para Birimi',
+        related='company_id.currency_id',
+        store=True,
+        readonly=True,
+    )
+
     veresiye_count = fields.Integer(
         string='Veresiye Fiş Sayısı',
         compute='_compute_veresiye_stats'
@@ -273,17 +281,20 @@ class ResPartner(models.Model):
 
     veresiye_total = fields.Monetary(
         string='Toplam Borç',
-        compute='_compute_veresiye_stats'
+        compute='_compute_veresiye_stats',
+        currency_field='currency_id',
     )
 
     veresiye_paid = fields.Monetary(
         string='Ödenen',
-        compute='_compute_veresiye_stats'
+        compute='_compute_veresiye_stats',
+        currency_field='currency_id',
     )
 
     veresiye_due = fields.Monetary(
         string='Kalan Borç',
-        compute='_compute_veresiye_stats'
+        compute='_compute_veresiye_stats',
+        currency_field='currency_id',
     )
 
     def _compute_veresiye_stats(self):
