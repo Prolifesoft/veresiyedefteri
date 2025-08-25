@@ -141,4 +141,23 @@
             </p>
         </field>
     </record>
+
+    <!-- List Actions -->
+    <record id="action_veresiye_ledger_add_payment_multi" model="ir.actions.server">
+        <field name="name">Ödeme Yap</field>
+        <field name="model_id" ref="model_veresiye_ledger"/>
+        <field name="binding_model_id" ref="model_veresiye_ledger"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_add_payment()</field>
+    </record>
+
+    <record id="action_veresiye_ledger_print_receipt_multi" model="ir.actions.server">
+        <field name="name">Fiş Yazdır</field>
+        <field name="model_id" ref="model_veresiye_ledger"/>
+        <field name="binding_model_id" ref="model_veresiye_ledger"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">action = env.ref('prolifesoft_veresiye_defteri.action_report_veresiye_receipt').report_action(records)</field>
+    </record>
 </odoo>
