@@ -1,54 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record id="paperformat_veresiye" model="report.paperformat">
-            <field name="name">80mm Receipt</field>
-            <field name="default" eval="False"/>
-            <field name="format">custom</field>
-            <field name="page_width">80</field>
-            <field name="page_height">297</field>
-            <field name="margin_top">5</field>
-            <field name="margin_bottom">5</field>
-            <field name="margin_left">5</field>
-            <field name="margin_right">5</field>
-        </record>
+    <!-- Report Action -->
+    <record id="action_report_veresiye_receipt" model="ir.actions.report">
+        <field name="name">Veresiye Fiş</field>
+        <field name="model">veresiye.ledger</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">prolifesoft_veresiye_defteri.report_veresiye_receipt</field>
+        <field name="report_file">prolifesoft_veresiye_defteri.report_veresiye_receipt</field>
+        <field name="paperformat_id" ref="paperformat_veresiye_80mm"/>
+        <field name="print_report_name">'VER - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_veresiye_ledger"/>
+        <field name="binding_type">report</field>
+    </record>
 
-        <report id="action_report_veresiye_receipt" model="veresiye.defteri"
-                string="Veresiye Fişi" report_type="qweb-pdf"
-                name="veresiyedefteri.report_receipt"
-                file="veresiyedefteri.report_receipt"
-                paperformat="paperformat_veresiye"/>
+    <!-- Report Template -->
+    <template id="report_veresiye_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-size: 11px; line-height: 1.2;">
+                        <!-- Header -->
+                        <div class="text-center mb-3">
+                            <h4 style="margin: 0; font-size: 14px;">
+                                <strong t-esc="o.company_id.name"/>
+                            </h4>
+                            <div style="font-size: 10px;">
+                                <div t-if="o.company_id.street" t-esc="o.company_id.street"/>
+                                <div t-if="o.company_id.phone">
+                                    Tel: <span t-esc="o.company_id.phone"/>
+                                </div>
+                            </div>
+                            <hr style="margin: 5px 0;"/>
+                            <div style="font-size: 12px;">
+                                <strong>VERESİYE FİŞİ</strong>
+                            </div>
+                        </div>
 
-        <template id="report_receipt">
-            <t t-call="web.basic_layout">
-                <t t-foreach="docs" t-as="doc">
-                    <div class="page">
-                        <h2>Veresiye Fişi</h2>
-                        <p><strong>Müşteri:</strong> <span t-esc="doc.partner_id.name"/></p>
-                        <p><strong>Tarih:</strong> <span t-esc="doc.date"/></p>
-                        <table class="table table-sm">
+                        <!-- Fiş Bilgileri -->
+                        <table style="width: 100%; font-size: 10px; margin-bottom: 10px;">
+                            <tr>
+                                <td>Fiş No:</td>
+                                <td><strong t-esc="o.name"/></td>
+                            </tr>
+                            <tr>
+                                <td>Tarih:</td>
+                                <td t-esc="o.date.strftime('%d.%m.%Y')"/>
+                            </tr>
+                            <tr>
+                                <td>Müşteri:</td>
+                                <td><strong t-esc="o.partner_id.name"/></td>
+                            </tr>
+                        </table>
+
+                        <hr style="margin: 5px 0;"/>
+
+                        <!-- Ürün Satırları -->
+                        <table style="width: 100%; font-size: 9px;">
                             <thead>
-                                <tr>
-                                    <th>Ürün</th>
-                                    <th>Adet</th>
-                                    <th>Fiyat</th>
-                                    <th>Tutar</th>
+                                <tr style="border-bottom: 1px solid #000;">
+                                    <th style="text-align: left; padding: 2px;">Ürün</th>
+                                    <th style="text-align: center; padding: 2px;">Adet</th>
+                                    <th style="text-align: right; padding: 2px;">Fiyat</th>
+                                    <th style="text-align: right; padding: 2px;">Toplam</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr t-foreach="doc.line_ids" t-as="line">
-                                    <td t-esc="line.product_id.display_name"/>
-                                    <td t-esc="line.quantity"/>
-                                    <td t-esc="line.price_unit"/>
-                                    <td t-esc="line.subtotal"/>
-                                </tr>
+                                <t t-foreach="o.line_ids" t-as="line">
+                                    <tr>
+                                        <td style="padding: 1px;" t-esc="line.name"/>
+                                        <td style="text-align: center; padding: 1px;" t-esc="'%.0f' % line.quantity"/>
+                                        <td style="text-align: right; padding: 1px;" t-esc="'%.2f' % line.price_unit"/>
+                                        <td style="text-align: right; padding: 1px;" t-esc="'%.2f' % line.subtotal"/>
+                                    </tr>
+                                </t>
                             </tbody>
                         </table>
-                        <p><strong>Toplam:</strong> <span t-esc="doc.total_amount"/></p>
-                        <p><strong>Ödenen:</strong> <span t-esc="doc.paid_amount"/></p>
-                        <p><strong>Kalan:</strong> <span t-esc="doc.remaining_amount"/></p>
+
+                        <hr style="margin: 5px 0;"/>
+
+                        <!-- Toplam Bilgileri -->
+                        <table style="width: 100%; font-size: 10px;">
+                            <tr>
+                                <td style="text-align: right;"><strong>TOPLAM:</strong></td>
+                                <td style="text-align: right; width: 30%;"><strong t-esc="'%.2f ₺' % o.amount_total"/></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">Ödenen:</td>
+                                <td style="text-align: right;" t-esc="'%.2f ₺' % o.amount_paid"/>
+                            </tr>
+                            <tr style="border-top: 1px solid #000;">
+                                <td style="text-align: right;"><strong>KALAN:</strong></td>
+                                <td style="text-align: right;"><strong t-esc="'%.2f ₺' % o.amount_due"/></td>
+                            </tr>
+                        </table>
+
+                        <!-- Footer -->
+                        <div class="text-center mt-3" style="font-size: 9px;">
+                            <div t-if="o.notes">
+                                <hr style="margin: 5px 0;"/>
+                                <div>Not: <span t-esc="o.notes"/></div>
+                            </div>
+                            <hr style="margin: 5px 0;"/>
+                            <div>Bu bir veresiye fişidir.</div>
+                            <div t-esc="context_timestamp(datetime.datetime.now()).strftime('%d.%m.%Y %H:%M')"/>
+                        </div>
                     </div>
                 </t>
             </t>
-        </template>
-    </data>
+        </t>
+    </template>
 </odoo>

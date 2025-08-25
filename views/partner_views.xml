@@ -1,103 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record id="view_ps_partner_ledger_tree" model="ir.ui.view">
-            <field name="name">res.partner.ledger.tree</field>
-            <field name="model">res.partner</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name"/>
-                    <field name="x_phone_display"/>
-                    <field name="x_ledger_total_debt" sum="Toplam"/>
-                    <field name="x_ledger_total_paid" sum="Toplam"/>
-                    <field name="x_ledger_balance" sum="Toplam"/>
-                    <field name="x_last_payment_date"/>
-                </tree>
+    <!-- Partner Form View - Smart Button ve Rozetler -->
+    <record id="view_partner_form_veresiye" model="ir.ui.view">
+        <field name="name">res.partner.form.veresiye</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Smart Button Ekleme -->
+            <div name="button_box" position="inside">
+                <button name="action_view_veresiye" type="object"
+                        class="oe_stat_button" icon="fa-credit-card">
+                    <field name="veresiye_count" widget="statinfo" string="Veresiye Fiş"/>
+                </button>
+            </div>
+
+            <!-- Rozetler - Category ID'den sonra ekle -->
+            <field name="category_id" position="after">
+                <group string="Veresiye Durumu" colspan="4"
+                       attrs="{'invisible': [('veresiye_count', '=', 0)]}">
+                    <div class="o_row">
+                        <span class="badge badge-pill badge-info">
+                            Toplam: <field name="veresiye_total" widget="monetary" nolabel="1"/>
+                        </span>
+                        <span class="badge badge-pill badge-success">
+                            Ödenen: <field name="veresiye_paid" widget="monetary" nolabel="1"/>
+                        </span>
+                        <span class="badge badge-pill badge-warning">
+                            Kalan: <field name="veresiye_due" widget="monetary" nolabel="1"/>
+                        </span>
+                    </div>
+                    <button name="action_print_veresiye_list" string="Yazdır (Liste)"
+                            type="object" class="btn-secondary oe_link"/>
+                </group>
             </field>
-        </record>
-
-        <record id="view_partner_veresiye_form" model="ir.ui.view">
-            <field name="name">res.partner.veresiye.form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//form/sheet" position="before">
-                    <header>
-                        <button name="action_add_payment" type="object" string="Ödeme Yap" class="btn-primary"/>
-                        <button name="action_pay_full" type="object" string="Tümünü Öde"/>
-                        <button name="action_print_ledger" type="object" string="Yazdır"/>
-                        <button name="action_delete" type="object" string="Sil" class="btn-danger"/>
-                        <button name="action_save" type="object" string="Kaydet"/>
-                    </header>
-                </xpath>
-                <xpath expr="//form/sheet" position="inside">
-                    <field name="duplicated_bank_account_partners_count" invisible="1"/>
-                    <field name="same_vat_partner_id" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
-                </xpath>
-
-                <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="action_view_ledger" type="object" class="oe_stat_button">
-                        <div class="o_form_field o_stat_info">
-                            <span class="o_stat_value"><field name="x_ledger_total_debt"/></span>
-                            <span class="o_stat_text">Borç</span>
-                        </div>
-                    </button>
-                    <button name="action_view_ledger" type="object" class="oe_stat_button">
-                        <div class="o_form_field o_stat_info">
-                            <span class="o_stat_value"><field name="x_ledger_total_paid"/></span>
-                            <span class="o_stat_text">Ödenen</span>
-                        </div>
-                    </button>
-                    <button name="action_view_ledger" type="object" class="oe_stat_button">
-                        <div class="o_form_field o_stat_info">
-                            <span class="o_stat_value"><field name="x_ledger_balance"/></span>
-                            <span class="o_stat_text">Kalan</span>
-                        </div>
-                    </button>
-                    <button name="action_view_ledger" type="object" class="oe_stat_button">
-                        <div class="o_form_field o_stat_info">
-                            <span class="o_stat_value"><field name="x_last_payment_date"/></span>
-                            <span class="o_stat_text">Son Ödeme Tarihi</span>
-                        </div>
-                    </button>
-                </xpath>
-
-                <xpath expr="//form/sheet/notebook" position="replace">
-                    <notebook>
-                        <page string="Fatura Satırları">
-                            <field name="ledger_entry_ids">
-                                <tree editable="bottom">
-                                    <field name="product_id"/>
-                                    <field name="description"/>
-                                    <field name="quantity" sum="Toplam"/>
-                                    <field name="price_unit" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="subtotal" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="total" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="paid_amount" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="remaining_amount" sum="Toplam" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="date" string="Ödeme Tarihi"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Diğer Bilgiler">
-                            <group>
-                                <group>
-                                    <field name="street"/>
-                                    <field name="city"/>
-                                    <field name="zip"/>
-                                    <field name="country_id"/>
-                                </group>
-                                <group>
-                                    <field name="phone"/>
-                                    <field name="mobile"/>
-                                    <field name="email"/>
-                                </group>
-                            </group>
-                        </page>
-                    </notebook>
-                </xpath>
-                <xpath expr="//div[contains(@class,'oe_chatter')]" position="replace"/>
-            </field>
-        </record>
-    </data>
+        </field>
+    </record>
 </odoo>

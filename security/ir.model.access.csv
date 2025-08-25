@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_ps_ledger_entry,access.ps.ledger.entry,model_ps_ledger_entry,base.group_user,1,1,1,1
+access_veresiye_ledger,veresiye.ledger,model_veresiye_ledger,base.group_user,1,1,1,1
+access_veresiye_ledger_line,veresiye.ledger.line,model_veresiye_ledger_line,base.group_user,1,1,1,1
+access_veresiye_payment,veresiye.payment,model_veresiye_payment,base.group_user,1,1,1,1
+access_veresiye_payment_wizard,veresiye.payment.wizard,model_veresiye_payment_wizard,base.group_user,1,1,1,1

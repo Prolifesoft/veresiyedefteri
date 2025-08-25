@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_veresiye_payment_wizard_form" model="ir.ui.view">
+        <field name="name">veresiye.payment.wizard.form</field>
+        <field name="model">veresiye.payment.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="ledger_id" readonly="1"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="amount" widget="monetary"/>
+                        <field name="date"/>
+                        <field name="note" placeholder="Ödeme notu..."/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm_payment" string="Ödemeyi Kaydet"
+                            type="object" class="btn-primary"/>
+                    <button string="İptal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
