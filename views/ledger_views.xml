@@ -6,7 +6,7 @@
             <field name="arch" type="xml">
                 <tree editable="bottom">
                     <control>
-                        <button name="print_receipt" type="object" string="Fiş Yazdır"/>
+                        <button name="print_receipt" type="object" string="Yazdır"/>
                     </control>
                     <field name="date"/>
                     <field name="partner_id"/>
@@ -38,7 +38,7 @@
                     <header>
                         <button name="action_post" type="object" string="Onayla" class="btn-primary" invisible="state != 'draft'"/>
                         <button name="action_reset_draft" type="object" string="Taslağa Al" invisible="state != 'posted'"/>
-                        <button name="print_receipt" type="object" string="Fiş Yazdır" class="btn-secondary"/>
+                        <button name="print_receipt" type="object" string="Yazdır" class="btn-secondary"/>
                     </header>
                     <sheet>
                         <group>
