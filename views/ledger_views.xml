@@ -33,6 +33,10 @@
                             invisible="state != 'posted'"/>
                     <button name="action_cancel" string="İptal Et" type="object"
                             invisible="state == 'cancelled'"/>
+                    <button name="action_add_payment" string="Ödeme Yap" type="object"
+                            class="btn-secondary" invisible="amount_due <= 0"/>
+                    <button name="action_pay_all" string="Tümünü Öde" type="object"
+                            class="btn-primary" invisible="amount_due <= 0"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancelled"/>
                 </header>
                 <sheet>
@@ -44,7 +48,7 @@
                     <group>
                         <group>
                             <field name="name" readonly="1"/>
-                            <field name="partner_id" options="{'no_create': True}"/>
+                            <field name="partner_id"/>
                         </group>
                         <group>
                             <field name="date"/>
@@ -57,7 +61,7 @@
                         <page string="Ürün Satırları">
                             <field name="line_ids">
                                 <tree editable="bottom">
-                                    <field name="product_id" options="{'no_create': True}"/>
+                                    <field name="product_id"/>
                                     <field name="name"/>
                                     <field name="quantity"/>
                                     <field name="price_unit" widget="monetary"/>
@@ -73,26 +77,15 @@
                                 <field name="amount_due" widget="monetary" class="oe_subtotal_footer_separator"/>
                             </group>
 
-                            <!-- Ödeme Butonları -->
-                            <div class="oe_clear">
-                                <div class="float-right">
-                                    <button name="action_add_payment" string="Ödeme Yap" type="object"
-                                            class="btn-secondary" invisible="amount_due &lt;= 0"/>
-                                    <button name="action_pay_all" string="Tümünü Öde" type="object"
-                                            class="btn-primary" invisible="amount_due &lt;= 0"/>
-                                </div>
-                            </div>
-
                             <!-- Ödemeler Listesi -->
-                            <group string="Ödemeler" colspan="4">
-                                <field name="payment_ids" nolabel="1">
-                                    <tree editable="bottom" create="1" edit="1" delete="1">
-                                        <field name="date"/>
-                                        <field name="amount" widget="monetary"/>
-                                        <field name="note"/>
-                                    </tree>
-                                </field>
-                            </group>
+                            <field name="payment_ids" string="Ödemeler" nolabel="1"
+                                   invisible="not payment_ids" class="o_field_full_width">
+                                <tree editable="bottom" create="1" edit="1" delete="1">
+                                    <field name="date"/>
+                                    <field name="amount" widget="monetary"/>
+                                    <field name="note"/>
+                                </tree>
+                            </field>
                         </page>
 
                         <page string="Ek Bilgiler">
