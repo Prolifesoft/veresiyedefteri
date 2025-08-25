@@ -21,20 +21,19 @@
     'data': [
         # Security
         'security/ir.model.access.csv',
-        
+
         # Data
         'data/sequence.xml',
         'data/paperformat.xml',
-        
+        # Reports
+        'report/receipt_report.xml',
+        'report/partner_list_report.xml',
+
         # Views
         'views/ledger_views.xml',
         'views/partner_views.xml',
         'wizard/payment_wizard_views.xml',
-        
-        # Reports
-        'report/receipt_report.xml',
-        'report/partner_list_report.xml',
-        
+
         # Menu
         'views/menu.xml',
     ],
