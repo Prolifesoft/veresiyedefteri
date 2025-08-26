@@ -299,6 +299,12 @@ class ResPartner(models.Model):
         currency_field='currency_id',
     )
 
+    currency_id = fields.Many2one(
+        'res.currency',
+        related='company_id.currency_id',
+        readonly=True,
+    )
+
     def _compute_veresiye_stats(self):
         """Veresiye istatistiklerini hesapla"""
         ledger_data = self.env['veresiye.ledger'].read_group(
@@ -330,8 +336,8 @@ class ResPartner(models.Model):
         totals = _(
             "Toplam Borç: %s   Ödenen: %s"
         ) % (
-            format_amount(self.env, self.veresiye_total, self.currency_id),
-            format_amount(self.env, self.veresiye_paid, self.currency_id),
+            format_amount(self.env, self.veresiye_total, self.env.company.currency_id),
+            format_amount(self.env, self.veresiye_paid, self.env.company.currency_id),
         )
         action['name'] = "%s (%s)" % (action['name'], totals)
         return action
