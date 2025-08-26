@@ -1,5 +1,6 @@
-from odoo import models, fields, api
+from odoo import api, fields, models, _
 from odoo.tools import float_round
+from odoo.tools.misc import format_amount
 
 
 class VeresiyeLedger(models.Model):
@@ -322,9 +323,17 @@ class ResPartner(models.Model):
 
     def action_view_veresiye(self):
         """Veresiye fişlerini görüntüle"""
+        self.ensure_one()
         action = self.env.ref('prolifesoft_veresiye_defteri.action_veresiye_ledger').read()[0]
         action['domain'] = [('partner_id', '=', self.id)]
         action['context'] = {'default_partner_id': self.id}
+        totals = _(
+            "Toplam Borç: %s   Ödenen: %s"
+        ) % (
+            format_amount(self.env, self.veresiye_total, self.currency_id),
+            format_amount(self.env, self.veresiye_paid, self.currency_id),
+        )
+        action['name'] = "%s (%s)" % (action['name'], totals)
         return action
 
     def action_print_veresiye_list(self):
