@@ -7,7 +7,7 @@
     'description': """
     Veresiye Defteri Modülü
     =======================
-    
+
     * Müşteri bazlı veresiye borç yönetimi
     * Ürün, adet, fiyat satırları ile borç kaydı
     * Kısmi ve tam ödeme takibi
@@ -19,19 +19,16 @@
     'license': 'Other OSI approved licence',
     'depends': ['base', 'product'],
     'data': [
-        # Security
         'security/ir.model.access.csv',
-
-        # Data
-         'data/sequence.xml',
-         'data/paperformat.xml',
-         # Reports
-         'report/partner_list_report.xml',
-
-         # Views
-         'views/ledger_views.xml',
-         'views/partner_views.xml',
-     ],
+        'data/sequence.xml',
+        'data/paperformat.xml',
+        'report/receipt_report.xml',
+        'report/partner_list_report.xml',
+        'views/ledger_views.xml',
+        'views/partner_views.xml',
+        'wizard/payment_wizard_views.xml',
+        'views/menu.xml',
+    ],
     'demo': [],
     'images': ['static/description/icon.png'],
     'installable': True,

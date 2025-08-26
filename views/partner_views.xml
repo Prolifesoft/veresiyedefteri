@@ -1,56 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Partner Form View - Smart Button ve Rozetler -->
     <record id="view_partner_form_veresiye" model="ir.ui.view">
         <field name="name">res.partner.form.veresiye</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <!-- Smart Button Ekleme -->
             <div name="button_box" position="inside">
-                <button name="action_view_veresiye" type="object"
-                        class="oe_stat_button" icon="fa-credit-card">
+                <button name="action_view_veresiye" type="object" class="oe_stat_button" icon="fa-credit-card">
                     <field name="veresiye_count" widget="statinfo" string="Veresiye Fiş"/>
                 </button>
-                <button name="action_view_veresiye" type="object"
-                        class="oe_stat_button" icon="fa-money-bill"
-                        invisible="veresiye_count == 0">
-                    <span class="o_stat_value">
-                        <field name="veresiye_total" widget="monetary"/>
-                    </span>
-                    <span class="o_stat_text">Toplam Borç</span>
-                </button>
-                <button name="action_view_veresiye" type="object"
-                        class="oe_stat_button" icon="fa-money-bill"
-                        invisible="veresiye_count == 0">
-                    <span class="o_stat_value">
-                        <field name="veresiye_paid" widget="monetary"/>
-                    </span>
-                    <span class="o_stat_text">Toplam Ödenen</span>
-                </button>
-                <button name="action_view_veresiye" type="object"
-                        class="oe_stat_button" icon="fa-money-bill"
-                        invisible="veresiye_count == 0">
-                    <span class="o_stat_value">
-                        <field name="veresiye_due" widget="monetary"/>
-                    </span>
-                    <span class="o_stat_text">Kalan Borç</span>
-                </button>
-                <button name="action_print_veresiye_list" type="object"
-                        class="oe_stat_button" icon="fa-print"
-                        invisible="veresiye_count == 0">
-                    <span class="o_stat_text">Yazdır (Liste)</span>
-                </button>
             </div>
-
-            <xpath expr="//notebook" position="inside">
-                <page string="Veresiye Defteri">
-                    <field name="ledger_ids" mode="form" context="{'default_partner_id': active_id}"
-                        options="{'no_create': True}"
-                        views="[(ref('prolifesoft_veresiye_defteri.view_veresiye_ledger_form'), 'form')]"/>
-                </page>
-            </xpath>
-
+            <field name="category_id" position="after">
+                <group string="Veresiye Durumu" colspan="4" invisible="veresiye_count == 0">
+                    <div class="o_row">
+                        <span class="badge badge-pill badge-info">
+                            Toplam: <field name="veresiye_total" widget="monetary" nolabel="1"/>
+                        </span>
+                        <span class="badge badge-pill badge-success">
+                            Ödenen: <field name="veresiye_paid" widget="monetary" nolabel="1"/>
+                        </span>
+                        <span class="badge badge-pill badge-warning">
+                            Kalan: <field name="veresiye_due" widget="monetary" nolabel="1"/>
+                        </span>
+                    </div>
+                    <button name="action_print_veresiye_list" string="Yazdır (Liste)" type="object" class="btn-secondary oe_link"/>
+                </group>
+            </field>
         </field>
     </record>
 </odoo>

@@ -1,40 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_veresiye_ledger_tree" model="ir.ui.view">
+        <field name="name">veresiye.ledger.tree</field>
+        <field name="model">veresiye.ledger</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state=='posted'" decoration-muted="state=='cancelled'">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="amount_total" widget="monetary"/>
+                <field name="amount_paid" widget="monetary"/>
+                <field name="amount_due" widget="monetary"/>
+                <field name="state" widget="badge"
+                       decoration-success="state=='posted'"
+                       decoration-info="state=='draft'"
+                       decoration-danger="state=='cancelled'"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="view_veresiye_ledger_form" model="ir.ui.view">
         <field name="name">veresiye.ledger.form</field>
         <field name="model">veresiye.ledger</field>
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_confirm" string="Onayla" type="object"
-                            class="oe_highlight" invisible="state != 'draft'"/>
-                    <button name="action_draft" string="Taslak" type="object"
-                            invisible="state != 'posted'"/>
-                    <button name="action_cancel" string="İptal Et" type="object"
-                            invisible="state == 'cancelled'"/>
-                    <button name="action_add_payment" string="Ödeme Yap" type="object"
-                            class="btn-secondary" invisible="amount_due &lt;= 0"/>
-                    <button name="action_pay_all" string="Tümünü Öde" type="object"
-                            class="btn-primary" invisible="amount_due &lt;= 0"/>
+                    <button name="action_confirm" string="Onayla" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_draft" string="Taslak" type="object" invisible="state != 'posted'"/>
+                    <button name="action_cancel" string="İptal Et" type="object" invisible="state == 'cancelled'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancelled"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_report_veresiye_receipt)d" type="action" string="Fiş Yazdır" class="oe_stat_button" icon="fa-print"/>
+                    </div>
                     <group>
                         <group>
-                            <field name="partner_id"/>
+                            <field name="name" readonly="1"/>
+                            <field name="partner_id" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="date"/>
-                            <field name="currency_id" invisible="1" readonly="1"/>
-                            <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
-
-                    <div class="o_row">
-                        <div class="o_col-8">
+                    <notebook>
+                        <page string="Ürün Satırları">
                             <field name="line_ids">
                                 <tree editable="bottom">
-                                    <field name="product_id"/>
+                                    <field name="product_id" options="{'no_create': True}"/>
                                     <field name="name"/>
                                     <field name="quantity"/>
                                     <field name="price_unit" widget="monetary"/>
@@ -42,28 +56,74 @@
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
                             </field>
-                        </div>
-                        <div class="o_col-4">
-                            <field name="payment_ids" string="Ödemeler" nolabel="1" class="o_field_full_width">
-                                <tree editable="bottom" create="1" edit="1" delete="1">
-                                    <field name="date"/>
-                                    <field name="amount" widget="monetary"/>
-                                    <field name="note"/>
-                                </tree>
-                            </field>
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="amount_total" widget="monetary" class="oe_subtotal_footer_separator"/>
                                 <field name="amount_paid" widget="monetary"/>
                                 <field name="amount_due" widget="monetary" class="oe_subtotal_footer_separator"/>
                             </group>
-                        </div>
-                    </div>
-
-                    <group>
-                        <field name="notes" placeholder="Ek açıklamalar..."/>
-                    </group>
+                            <div class="oe_clear">
+                                <div class="float-right">
+                                    <button name="action_add_payment" string="Ödeme Yap" type="object" class="btn-secondary" invisible="amount_due &lt;= 0"/>
+                                    <button name="action_pay_all" string="Tümünü Öde" type="object" class="btn-primary" invisible="amount_due &lt;= 0"/>
+                                </div>
+                            </div>
+                            <group string="Ödemeler" invisible="not payment_ids">
+                                <field name="payment_ids" nolabel="1">
+                                    <tree>
+                                        <field name="date"/>
+                                        <field name="amount" widget="monetary"/>
+                                        <field name="note"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Ek Bilgiler">
+                            <group>
+                                <field name="notes" placeholder="Ek açıklamalar..."/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="view_veresiye_ledger_search" model="ir.ui.view">
+        <field name="name">veresiye.ledger.search</field>
+        <field name="model">veresiye.ledger</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Fiş Numarası"/>
+                <field name="partner_id" string="Müşteri"/>
+                <separator/>
+                <filter string="Taslak" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Onaylandı" name="posted" domain="[('state', '=', 'posted')]"/>
+                <filter string="Borcun Kalan" name="has_due" domain="[('amount_due', '>', 0)]"/>
+                <separator/>
+                <filter string="Bu Ay" name="current_month" domain="[('date', '>=', (context_today() - relativedelta(day=1)).strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + relativedelta(day=31)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <group expand="0" string="Grupla">
+                    <filter string="Müşteri" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Durum" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Tarih" name="group_date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_veresiye_ledger" model="ir.actions.act_window">
+        <field name="name">Veresiye Defteri</field>
+        <field name="res_model">veresiye.ledger</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_veresiye_ledger_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                İlk veresiye fişinizi oluşturun!
+            </p>
+            <p>
+                Müşterilerinizin veresiye alışverişlerini takip edin.
+                Ürün satırları ekleyin ve ödemeleri kaydedin.
+            </p>
         </field>
     </record>
 </odoo>

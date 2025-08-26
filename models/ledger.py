@@ -1,6 +1,5 @@
-from odoo import api, fields, models, _
+from odoo import models, fields, api
 from odoo.tools import float_round
-from odoo.tools.misc import format_amount
 
 
 class VeresiyeLedger(models.Model):
@@ -8,7 +7,7 @@ class VeresiyeLedger(models.Model):
     _name = 'veresiye.ledger'
     _description = 'Veresiye Defteri Fişi'
     _order = 'date desc, name desc'
-    _rec_name = 'date'
+    _rec_name = 'name'
 
     name = fields.Char(
         string='Fiş Numarası',
@@ -33,17 +32,12 @@ class VeresiyeLedger(models.Model):
         index=True,
         help='Fiş tarihi'
     )
-    company_id = fields.Many2one('res.company', string='Şirket', required=True, readonly=True, index=True, default=lambda self: self.env.company)
-
 
     state = fields.Selection([
         ('draft', 'Taslak'),
         ('posted', 'Onaylandı'),
         ('cancelled', 'İptal Edildi'),
-    ],
-        string='Durum',
-        default='draft',
-        help='Fiş durumu (sadece görsel)')
+    ], string='Durum', default='draft', help='Fiş durumu (sadece görsel)')
 
     line_ids = fields.One2many(
         'veresiye.ledger.line',
@@ -81,7 +75,12 @@ class VeresiyeLedger(models.Model):
         help='Kalan borç tutarı'
     )
 
-    currency_id = fields.Many2one('res.currency', string='Para Birimi', related='company_id.currency_id', store=True, readonly=True, help='Para birimi')
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Para Birimi',
+        default=lambda self: self.env.company.currency_id,
+        help='Para birimi'
+    )
 
     notes = fields.Text(
         string='Notlar',
@@ -90,14 +89,12 @@ class VeresiyeLedger(models.Model):
 
     @api.model
     def create(self, vals):
-        """Kayıt oluştururken sıra numarası ata"""
         if vals.get('name', '/') == '/':
             vals['name'] = self.env['ir.sequence'].next_by_code('veresiye.ledger') or '/'
         return super().create(vals)
 
-    @api.depends('line_ids.subtotal')
+    @api.depends('line_ids.subtotal', 'payment_ids.amount')
     def _compute_amounts(self):
-        """Tutarları hesapla"""
         for record in self:
             amount_total = sum(record.line_ids.mapped('subtotal'))
             amount_paid = sum(record.payment_ids.mapped('amount'))
@@ -106,40 +103,38 @@ class VeresiyeLedger(models.Model):
             record.amount_due = max(0.0, amount_total - amount_paid)
 
     def action_confirm(self):
-        """Fişi onayla"""
         self.write({'state': 'posted'})
         return True
 
     def action_cancel(self):
-        """Fişi iptal et"""
         self.write({'state': 'cancelled'})
         return True
 
     def action_draft(self):
-        """Fişi taslağa çevir"""
         self.write({'state': 'draft'})
         return True
 
     def action_add_payment(self):
-        """Ödeme satırı ekle"""
-        self.ensure_one()
-        self.env['veresiye.payment'].create({
-            'ledger_id': self.id,
-            'date': fields.Date.today(),
-            'amount': 0.0,
-        })
-        return True
+        return {
+            'name': 'Ödeme Yap',
+            'type': 'ir.actions.act_window',
+            'res_model': 'veresiye.payment.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_ledger_id': self.id,
+                'default_amount': self.amount_due,
+            }
+        }
 
     def action_pay_all(self):
-        """Tümünü öde"""
-        for record in self:
-            if record.amount_due > 0:
-                self.env['veresiye.payment'].create({
-                    'ledger_id': record.id,
-                    'date': fields.Date.today(),
-                    'amount': record.amount_due,
-                    'note': 'Tam ödeme'
-                })
+        if self.amount_due > 0:
+            self.env['veresiye.payment'].create({
+                'ledger_id': self.id,
+                'date': fields.Date.today(),
+                'amount': self.amount_due,
+                'note': 'Tam ödeme'
+            })
         return True
 
 
@@ -197,7 +192,6 @@ class VeresiyeLedgerLine(models.Model):
 
     @api.depends('quantity', 'price_unit')
     def _compute_subtotal(self):
-        """Ara toplam hesapla"""
         for line in self:
             line.subtotal = float_round(
                 line.quantity * line.price_unit,
@@ -206,7 +200,6 @@ class VeresiyeLedgerLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        """Ürün seçildiğinde ad ve fiyatı otomatik doldur"""
         if self.product_id:
             self.name = self.product_id.display_name
             self.price_unit = self.product_id.list_price
@@ -252,22 +245,15 @@ class VeresiyePayment(models.Model):
 
     @api.constrains('amount')
     def _check_amount_positive(self):
-        """Ödeme tutarının pozitif olduğunu kontrol et"""
         for payment in self:
             if payment.amount <= 0:
                 payment.amount = abs(payment.amount) or 0.01
 
 
 class ResPartner(models.Model):
-    """Partner modeli genişletmesi - smart button ve rozetler için"""
     _inherit = 'res.partner'
 
-    currency_id = fields.Many2one(
-        'res.currency',
-        string='Para Birimi',
-        related='company_id.currency_id',
-        readonly=True,
-    )
+    currency_id = fields.Many2one('res.currency', string='Para Birimi', related='company_id.currency_id', readonly=True)
 
     veresiye_count = fields.Integer(
         string='Veresiye Fiş Sayısı',
@@ -277,31 +263,24 @@ class ResPartner(models.Model):
     veresiye_total = fields.Monetary(
         string='Toplam Borç',
         compute='_compute_veresiye_stats',
-        currency_field='currency_id',
+        currency_field='currency_id'
     )
 
     veresiye_paid = fields.Monetary(
         string='Ödenen',
         compute='_compute_veresiye_stats',
-        currency_field='currency_id',
+        currency_field='currency_id'
     )
 
     veresiye_due = fields.Monetary(
         string='Kalan Borç',
         compute='_compute_veresiye_stats',
-        currency_field='currency_id',
-    )
-    
-    ledger_ids = fields.One2many(
-        'veresiye.ledger',
-        'partner_id',
-        string='Veresiye Fişleri',
+        currency_field='currency_id'
     )
 
     def _compute_veresiye_stats(self):
-        """Veresiye istatistiklerini hesapla"""
         ledger_data = self.env['veresiye.ledger'].read_group(
-            domain=[('partner_id', 'in', self.ids), ('company_id', '=', self.env.company.id)],
+            domain=[('partner_id', 'in', self.ids)],
             fields=['partner_id', 'amount_total', 'amount_paid', 'amount_due'],
             groupby=['partner_id']
         )
@@ -321,25 +300,10 @@ class ResPartner(models.Model):
             partner.veresiye_due = stats.get('due', 0.0)
 
     def action_view_veresiye(self):
-        """Veresiye fişlerini görüntüle"""
-        self.ensure_one()
-        ledger = self.env['veresiye.ledger'].search([('partner_id', '=', self.id)], limit=1)
-        if not ledger:
-            ledger = self.env['veresiye.ledger'].create({'partner_id': self.id})
-        totals = _("Toplam Borç: %s   Ödenen: %s") % (
-            format_amount(self.env, self.veresiye_total, self.env.company.currency_id),
-            format_amount(self.env, self.veresiye_paid, self.env.company.currency_id),
-        )
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'veresiye.ledger',
-            'view_mode': 'form',
-            'res_id': ledger.id,
-            'name': "%s (%s)" % (_('Veresiye Defteri'), totals),
-            'context': {'default_partner_id': self.id},
-            'target': 'current',
-        }
+        action = self.env.ref('prolifesoft_veresiye_defteri.action_veresiye_ledger').read()[0]
+        action['domain'] = [('partner_id', '=', self.id)]
+        action['context'] = {'default_partner_id': self.id}
+        return action
 
     def action_print_veresiye_list(self):
-        """Partner veresiye listesini yazdır"""
         return self.env.ref('prolifesoft_veresiye_defteri.action_report_veresiye_partner_list').report_action(self)
