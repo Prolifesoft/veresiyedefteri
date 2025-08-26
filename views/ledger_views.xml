@@ -13,9 +13,9 @@
                     <button name="action_cancel" string="İptal Et" type="object"
                             invisible="state == 'cancelled'"/>
                     <button name="action_add_payment" string="Ödeme Yap" type="object"
-                            class="btn-secondary" invisible="amount_due <= 0"/>
+                            class="btn-secondary" invisible="amount_due &lt;= 0"/>
                     <button name="action_pay_all" string="Tümünü Öde" type="object"
-                            class="btn-primary" invisible="amount_due <= 0"/>
+                            class="btn-primary" invisible="amount_due &lt;= 0"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancelled"/>
                 </header>
                 <sheet>
