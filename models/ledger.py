@@ -87,6 +87,16 @@ class VeresiyeLedger(models.Model):
         help='Ek açıklamalar'
     )
 
+    def action_save_close(self):
+        """Kaydedip partner formuna dön"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.partner',
+            'res_id': self.partner_id.id,
+            'view_mode': 'form',
+        }
+
     @api.model
     def create(self, vals):
         if vals.get('name', '/') == '/':
@@ -190,6 +200,20 @@ class VeresiyeLedgerLine(models.Model):
         store=True
     )
 
+    date = fields.Date(
+        related='ledger_id.date',
+        string='Tarih',
+        store=True
+    )
+
+    partner_id = fields.Many2one(
+        related='ledger_id.partner_id',
+        string='Müşteri',
+        store=True,
+        index=True,
+        readonly=True
+    )
+
     @api.depends('quantity', 'price_unit')
     def _compute_subtotal(self):
         for line in self:
@@ -243,6 +267,14 @@ class VeresiyePayment(models.Model):
         store=True
     )
 
+    partner_id = fields.Many2one(
+        related='ledger_id.partner_id',
+        string='Müşteri',
+        store=True,
+        index=True,
+        readonly=True
+    )
+
     @api.constrains('amount')
     def _check_amount_positive(self):
         for payment in self:
@@ -277,6 +309,10 @@ class ResPartner(models.Model):
         compute='_compute_veresiye_stats',
         currency_field='currency_id'
     )
+
+    ledger_ids = fields.One2many('veresiye.ledger', 'partner_id', string='Veresiye Fişleri')
+    ledger_line_ids = fields.One2many('veresiye.ledger.line', 'partner_id', string='Veresiye Satırları')
+    ledger_payment_ids = fields.One2many('veresiye.payment', 'partner_id', string='Veresiye Ödemeleri')
 
     def _compute_veresiye_stats(self):
         ledger_data = self.env['veresiye.ledger'].read_group(

@@ -26,6 +26,31 @@
                     <button name="action_print_veresiye_list" string="Yazdır (Liste)" type="object" class="btn-secondary oe_link"/>
                 </group>
             </field>
+            <xpath expr="//notebook" position="inside">
+                <page string="Veresiye Defteri">
+                    <field name="ledger_line_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="date"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="subtotal" widget="monetary"/>
+                        </tree>
+                    </field>
+                    <field name="ledger_payment_ids" string="Ödemeler" nolabel="1" attrs="{'invisible': [('ledger_payment_ids','=',[])]}">
+                        <tree editable="bottom">
+                            <field name="date"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="note"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//div[@class='oe_chatter_position oe_folded']" position="replace">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>

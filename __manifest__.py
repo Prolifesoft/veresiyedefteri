@@ -22,7 +22,6 @@
         'security/ir.model.access.csv',
         'data/sequence.xml',
         'data/paperformat.xml',
-        'report/receipt_report.xml',
         'report/partner_list_report.xml',
         'views/ledger_views.xml',
         'views/partner_views.xml',

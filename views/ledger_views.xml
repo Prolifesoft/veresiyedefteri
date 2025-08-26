@@ -28,12 +28,11 @@
                     <button name="action_confirm" string="Onayla" type="object" class="oe_highlight" invisible="state != 'draft'"/>
                     <button name="action_draft" string="Taslak" type="object" invisible="state != 'posted'"/>
                     <button name="action_cancel" string="İptal Et" type="object" invisible="state == 'cancelled'"/>
+                    <button name="action_add_payment" string="Ödeme Yap" type="object" class="btn-secondary" invisible="amount_due &lt;= 0"/>
+                    <button name="action_save_close" string="Kaydet" type="object" class="btn-primary"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancelled"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="%(action_report_veresiye_receipt)d" type="action" string="Fiş Yazdır" class="oe_stat_button" icon="fa-print"/>
-                    </div>
                     <group>
                         <group>
                             <field name="name" readonly="1"/>
@@ -61,12 +60,6 @@
                                 <field name="amount_paid" widget="monetary"/>
                                 <field name="amount_due" widget="monetary" class="oe_subtotal_footer_separator"/>
                             </group>
-                            <div class="oe_clear">
-                                <div class="float-right">
-                                    <button name="action_add_payment" string="Ödeme Yap" type="object" class="btn-secondary" invisible="amount_due &lt;= 0"/>
-                                    <button name="action_pay_all" string="Tümünü Öde" type="object" class="btn-primary" invisible="amount_due &lt;= 0"/>
-                                </div>
-                            </div>
                             <group string="Ödemeler" invisible="not payment_ids">
                                 <field name="payment_ids" nolabel="1">
                                     <tree>
