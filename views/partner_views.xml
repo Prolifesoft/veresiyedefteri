@@ -51,8 +51,6 @@
                 </page>
             </xpath>
 
-            <!-- Chatter alanını kaldır -->
-            <xpath expr="//chatter" position="replace"/>
         </field>
     </record>
 </odoo>

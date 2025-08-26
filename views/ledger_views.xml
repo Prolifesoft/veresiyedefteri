@@ -55,36 +55,35 @@
                         </group>
                     </group>
 
-                    <div class="o_row">
-                        <div class="o_col-6">
-                            <field name="line_ids">
-                                <tree editable="bottom">
-                                    <field name="product_id"/>
-                                    <field name="name"/>
-                                    <field name="quantity"/>
-                                    <field name="price_unit" widget="monetary"/>
-                                    <field name="subtotal" widget="monetary" readonly="1"/>
-                                    <field name="currency_id" invisible="1"/>
-                                </tree>
-                            </field>
-                        </div>
-                        <div class="o_col-6">
-                            <field name="payment_ids" string="Ödemeler" nolabel="1"
-                                   class="o_field_full_width">
-                                <tree editable="bottom" create="1" edit="1" delete="1">
-                                    <field name="date"/>
-                                    <field name="amount" widget="monetary"/>
-                                    <field name="note"/>
-                                </tree>
-                            </field>
-                        </div>
-                    </div>
-
-                    <group class="oe_subtotal_footer oe_right">
-                        <field name="amount_total" widget="monetary" class="oe_subtotal_footer_separator"/>
-                        <field name="amount_paid" widget="monetary"/>
-                        <field name="amount_due" widget="monetary" class="oe_subtotal_footer_separator"/>
-                    </group>
+                      <div class="o_row">
+                          <div class="o_col-8">
+                              <field name="line_ids">
+                                  <tree editable="bottom">
+                                      <field name="product_id"/>
+                                      <field name="name"/>
+                                      <field name="quantity"/>
+                                      <field name="price_unit" widget="monetary"/>
+                                      <field name="subtotal" widget="monetary" readonly="1"/>
+                                      <field name="currency_id" invisible="1"/>
+                                  </tree>
+                              </field>
+                          </div>
+                          <div class="o_col-4">
+                              <field name="payment_ids" string="Ödemeler" nolabel="1"
+                                     class="o_field_full_width">
+                                  <tree editable="bottom" create="1" edit="1" delete="1">
+                                      <field name="date"/>
+                                      <field name="amount" widget="monetary"/>
+                                      <field name="note"/>
+                                  </tree>
+                              </field>
+                              <group class="oe_subtotal_footer oe_right">
+                                  <field name="amount_total" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                  <field name="amount_paid" widget="monetary"/>
+                                  <field name="amount_due" widget="monetary" class="oe_subtotal_footer_separator"/>
+                              </group>
+                          </div>
+                      </div>
 
                     <group>
                         <field name="notes" placeholder="Ek açıklamalar..."/>
