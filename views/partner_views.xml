@@ -40,6 +40,9 @@
                                 (ref('prolifesoft_veresiye_defteri.view_veresiye_ledger_form'), 'form')]"/>
                 </page>
             </xpath>
+
+            <!-- Chatter alanını kaldır -->
+            <xpath expr="//chatter" position="replace"/>
         </field>
     </record>
 </odoo>

@@ -43,7 +43,6 @@ class VeresiyeLedger(models.Model):
     ],
         string='Durum',
         default='draft',
-        tracking=True,
         help='Fiş durumu (sadece görsel)')
 
     line_ids = fields.One2many(
