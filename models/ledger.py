@@ -121,19 +121,14 @@ class VeresiyeLedger(models.Model):
         return True
 
     def action_add_payment(self):
-        """Ödeme sihirbazını aç"""
+        """Ödeme satırı ekle"""
         self.ensure_one()
-        return {
-            'name': 'Ödeme Yap',
-            'type': 'ir.actions.act_window',
-            'res_model': 'veresiye.payment.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_ledger_id': self.id,
-                'default_amount': self.amount_due,
-            }
-        }
+        self.env['veresiye.payment'].create({
+            'ledger_id': self.id,
+            'date': fields.Date.today(),
+            'amount': 0.0,
+        })
+        return True
 
     def action_pay_all(self):
         """Tümünü öde"""
@@ -328,17 +323,22 @@ class ResPartner(models.Model):
     def action_view_veresiye(self):
         """Veresiye fişlerini görüntüle"""
         self.ensure_one()
-        action = self.env.ref('prolifesoft_veresiye_defteri.action_veresiye_ledger').read()[0]
-        action['domain'] = [('partner_id', '=', self.id)]
-        action['context'] = {'default_partner_id': self.id}
-        totals = _(
-            "Toplam Borç: %s   Ödenen: %s"
-        ) % (
+        ledger = self.env['veresiye.ledger'].search([('partner_id', '=', self.id)], limit=1)
+        if not ledger:
+            ledger = self.env['veresiye.ledger'].create({'partner_id': self.id})
+        totals = _("Toplam Borç: %s   Ödenen: %s") % (
             format_amount(self.env, self.veresiye_total, self.env.company.currency_id),
             format_amount(self.env, self.veresiye_paid, self.env.company.currency_id),
         )
-        action['name'] = "%s (%s)" % (action['name'], totals)
-        return action
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'veresiye.ledger',
+            'view_mode': 'form',
+            'res_id': ledger.id,
+            'name': "%s (%s)" % (_('Veresiye Defteri'), totals),
+            'context': {'default_partner_id': self.id},
+            'target': 'current',
+        }
 
     def action_print_veresiye_list(self):
         """Partner veresiye listesini yazdır"""

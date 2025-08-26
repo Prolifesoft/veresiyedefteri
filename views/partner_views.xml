@@ -45,9 +45,9 @@
 
             <xpath expr="//notebook" position="inside">
                 <page string="Veresiye Defteri">
-                    <field name="ledger_ids" mode="tree,form" context="{'default_partner_id': active_id}"
-                        views="[(ref('prolifesoft_veresiye_defteri.view_veresiye_ledger_tree'), 'tree'),
-                                (ref('prolifesoft_veresiye_defteri.view_veresiye_ledger_form'), 'form')]"/>
+                    <field name="ledger_ids" mode="form" context="{'default_partner_id': active_id}"
+                        options="{'no_create': True}"
+                        views="[(ref('prolifesoft_veresiye_defteri.view_veresiye_ledger_form'), 'form')]"/>
                 </page>
             </xpath>
 

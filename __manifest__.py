@@ -23,17 +23,15 @@
         'security/ir.model.access.csv',
 
         # Data
-        'data/sequence.xml',
-        'data/paperformat.xml',
-        # Reports
-        'report/receipt_report.xml',
-        'report/partner_list_report.xml',
+         'data/sequence.xml',
+         'data/paperformat.xml',
+         # Reports
+         'report/partner_list_report.xml',
 
-        # Views
-        'views/ledger_views.xml',
-        'views/partner_views.xml',
-        'wizard/payment_wizard_views.xml',
-    ],
+         # Views
+         'views/ledger_views.xml',
+         'views/partner_views.xml',
+     ],
     'demo': [],
     'images': ['static/description/icon.png'],
     'installable': True,
