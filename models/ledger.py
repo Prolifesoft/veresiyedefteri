@@ -298,11 +298,11 @@ class ResPartner(models.Model):
         compute='_compute_veresiye_stats',
         currency_field='currency_id',
     )
-
-    currency_id = fields.Many2one(
-        'res.currency',
-        related='company_id.currency_id',
-        readonly=True,
+    
+    ledger_ids = fields.One2many(
+        'veresiye.ledger',
+        'partner_id',
+        string='Veresiye Fişleri',
     )
 
     def _compute_veresiye_stats(self):
