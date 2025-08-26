@@ -17,7 +17,7 @@
     'author': 'ProlifeSoft',
     'website': 'https://www.prolifesoft.com',
     'license': 'Other OSI approved licence',
-    'depends': ['base', 'product', 'mail', 'account'],
+    'depends': ['base', 'product'],
     'data': [
         # Security
         'security/ir.model.access.csv',
@@ -28,13 +28,11 @@
         # Reports
         'report/receipt_report.xml',
         'report/partner_list_report.xml',
-        'report/invoice_pos_receipt.xml',
 
         # Views
         'views/ledger_views.xml',
         'views/partner_views.xml',
         'wizard/payment_wizard_views.xml',
-
     ],
     'demo': [],
     'images': ['static/description/icon.png'],

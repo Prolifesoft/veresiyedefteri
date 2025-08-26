@@ -7,7 +7,6 @@ class VeresiyeLedger(models.Model):
     """Veresiye Fiş (Header)"""
     _name = 'veresiye.ledger'
     _description = 'Veresiye Defteri Fişi'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc, name desc'
     _rec_name = 'date'
 

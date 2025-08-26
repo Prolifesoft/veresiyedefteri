@@ -90,10 +90,6 @@
                         <field name="notes" placeholder="Ek açıklamalar..."/>
                     </group>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
             </form>
         </field>
     </record>
