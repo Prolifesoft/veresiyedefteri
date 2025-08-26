@@ -9,7 +9,7 @@ class VeresiyeLedger(models.Model):
     _description = 'Veresiye Defteri Fişi'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date desc, name desc'
-    _rec_name = 'name'
+    _rec_name = 'date'
 
     name = fields.Char(
         string='Fiş Numarası',

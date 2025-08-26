@@ -63,8 +63,7 @@
                                     <!-- Fiş Başlığı -->
                                     <table style="width: 100%; font-size: 9px;">
                                         <tr>
-                                            <td><strong t-esc="ledger.name"/></td>
-                                            <td style="text-align: right;" t-esc="ledger.date.strftime('%d.%m.%Y')"/>
+                                            <td style="text-align: left;" t-esc="ledger.date.strftime('%d.%m.%Y')"/>
                                         </tr>
                                     </table>
 
@@ -102,7 +101,6 @@
                                     <t t-foreach="payments" t-as="payment">
                                         <tr>
                                             <td t-esc="payment.date.strftime('%d.%m.%Y')"/>
-                                            <td t-esc="payment.ledger_id.name"/>
                                             <td style="text-align: right;" t-esc="'%.2f ₺' % payment.amount"/>
                                             <td t-esc="payment.note or ''"/>
                                         </tr>

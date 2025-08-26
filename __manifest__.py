@@ -35,8 +35,6 @@
         'views/partner_views.xml',
         'wizard/payment_wizard_views.xml',
 
-        # Menu
-        'views/menu.xml',
     ],
     'demo': [],
     'images': ['static/description/icon.png'],
