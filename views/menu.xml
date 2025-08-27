@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_veresiye_root" name="Veresiye Defteri" parent="contacts.menu_contacts" sequence="10"/>
+    <menuitem id="menu_veresiye_ledger" name="Veresiye Defteri" parent="menu_veresiye_root" action="action_veresiye_ledger" sequence="1"/>
+</odoo>

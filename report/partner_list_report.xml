@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Action -->
+    <record id="action_report_veresiye_partner_list" model="ir.actions.report">
+        <field name="name">Partner Veresiye Listesi</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">prolifesoft_veresiye_defteri.report_veresiye_partner_list</field>
+        <field name="report_file">prolifesoft_veresiye_defteri.report_veresiye_partner_list</field>
+        <field name="paperformat_id" ref="paperformat_veresiye_80mm"/>
+        <field name="print_report_name">'Veresiye Liste - %s' % object.name</field>
+    </record>
+
+    <!-- Report Template -->
+    <template id="report_veresiye_partner_list">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="partner">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-size: 10px; line-height: 1.2;">
+                        <!-- Header -->
+                        <div class="text-center mb-3">
+                            <h4 style="margin: 0; font-size: 14px;">
+                                <strong t-esc="partner.company_id.name"/>
+                            </h4>
+                            <div style="font-size: 10px;">
+                                <div t-if="partner.company_id.street" t-esc="partner.company_id.street"/>
+                                <div t-if="partner.company_id.phone">
+                                    Tel: <span t-esc="partner.company_id.phone"/>
+                                </div>
+                            </div>
+                            <hr style="margin: 5px 0;"/>
+                            <div style="font-size: 12px;">
+                                <strong>VERESİYE LİSTESİ</strong>
+                            </div>
+                        </div>
+
+                        <!-- Partner Bilgileri -->
+                        <table style="width: 100%; font-size: 10px; margin-bottom: 10px;">
+                            <tr>
+                                <td>Müşteri:</td>
+                                <td><strong t-esc="partner.name"/></td>
+                            </tr>
+                            <tr t-if="partner.phone">
+                                <td>Telefon:</td>
+                                <td t-esc="partner.phone"/>
+                            </tr>
+                            <tr>
+                                <td>Tarih:</td>
+                                <td t-esc="context_timestamp(datetime.datetime.now()).strftime('%d.%m.%Y')"/>
+                            </tr>
+                        </table>
+
+                        <hr style="margin: 5px 0;"/>
+
+                        <!-- Veresiye Fişleri -->
+                        <t t-set="ledgers" t-value="request.env['veresiye.ledger'].search([('partner_id', '=', partner.id)], order='date desc, name desc')"/>
+
+                        <t t-if="ledgers">
+                            <div style="font-size: 11px; font-weight: bold; margin-bottom: 5px;">FİŞLER:</div>
+
+                            <t t-foreach="ledgers" t-as="ledger">
+                                <div style="margin-bottom: 10px; border-bottom: 1px dotted #999; padding-bottom: 5px;">
+                                    <!-- Fiş Başlığı -->
+                                    <table style="width: 100%; font-size: 9px;">
+                                        <tr>
+                                            <td style="text-align: left;" t-esc="ledger.date.strftime('%d.%m.%Y')"/>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Fiş Satırları -->
+                                    <table style="width: 100%; font-size: 8px; margin: 3px 0;">
+                                        <t t-foreach="ledger.line_ids" t-as="line">
+                                            <tr>
+                                                <td style="padding: 1px;" t-esc="line.name"/>
+                                                <td style="text-align: center; width: 15%; padding: 1px;" t-esc="'%.0f' % line.quantity"/>
+                                                <td style="text-align: right; width: 20%; padding: 1px;" t-esc="'%.2f' % line.price_unit"/>
+                                                <td style="text-align: right; width: 20%; padding: 1px;" t-esc="'%.2f' % line.subtotal"/>
+                                            </tr>
+                                        </t>
+                                    </table>
+
+                                    <!-- Fiş Toplamı -->
+                                    <table style="width: 100%; font-size: 9px;">
+                                        <tr>
+                                            <td style="text-align: right; width: 70%;">Toplam:</td>
+                                            <td style="text-align: right; font-weight: bold;" t-esc="'%.2f ₺' % ledger.amount_total"/>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </t>
+
+                            <hr style="margin: 10px 0;"/>
+
+                            <!-- Ödemeler -->
+                            <t t-set="payments" t-value="request.env['veresiye.payment'].search([('ledger_id', 'in', ledgers.ids)], order='date desc')"/>
+
+                            <t t-if="payments">
+                                <div style="font-size: 11px; font-weight: bold; margin-bottom: 5px;">ÖDEMELER:</div>
+
+                                <table style="width: 100%; font-size: 9px;">
+                                    <t t-foreach="payments" t-as="payment">
+                                        <tr>
+                                            <td t-esc="payment.date.strftime('%d.%m.%Y')"/>
+                                            <td style="text-align: right;" t-esc="'%.2f ₺' % payment.amount"/>
+                                            <td t-esc="payment.note or ''"/>
+                                        </tr>
+                                    </t>
+                                </table>
+
+                                <hr style="margin: 10px 0;"/>
+                            </t>
+
+                            <!-- Genel Özet -->
+                            <table style="width: 100%; font-size: 11px; font-weight: bold;">
+                                <tr style="border-bottom: 1px solid #000;">
+                                    <td style="text-align: right; width: 70%;">TOPLAM BORÇ:</td>
+                                    <td style="text-align: right;" t-esc="'%.2f ₺' % partner.veresiye_total"/>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">Ödenen:</td>
+                                    <td style="text-align: right;" t-esc="'%.2f ₺' % partner.veresiye_paid"/>
+                                </tr>
+                                <tr style="border-top: 1px solid #000; border-bottom: 2px solid #000;">
+                                    <td style="text-align: right;">KALAN BORÇ:</td>
+                                    <td style="text-align: right; font-size: 12px;" t-esc="'%.2f ₺' % partner.veresiye_due"/>
+                                </tr>
+                            </table>
+                        </t>
+
+                        <t t-if="not ledgers">
+                            <div class="text-center" style="margin-top: 50px; color: #666;">
+                                Bu müşterinin veresiye kaydı bulunmamaktadır.
+                            </div>
+                        </t>
+
+                        <!-- Footer -->
+                        <div class="text-center mt-3" style="font-size: 8px; position: absolute; bottom: 10px; width: 100%;">
+                            <hr style="margin: 5px 0;"/>
+                            <div>Veresiye Defteri Listesi</div>
+                            <div t-esc="context_timestamp(datetime.datetime.now()).strftime('%d.%m.%Y %H:%M')"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

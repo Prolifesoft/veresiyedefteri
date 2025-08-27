@@ -1,48 +1,47 @@
-from odoo import fields, models
+from odoo import models, fields
 
 
-class LedgerPaymentWizard(models.TransientModel):
-    _name = 'ps.ledger.payment.wizard'
+class VeresiyePaymentWizard(models.TransientModel):
+    """Ödeme Sihirbazı"""
+    _name = 'veresiye.payment.wizard'
     _description = 'Veresiye Ödeme Sihirbazı'
 
-    partner_id = fields.Many2one(
-        'res.partner', string='Müşteri', required=True
-    )
-    amount = fields.Monetary(string='Tutar', required=True)
-    payment_method = fields.Selection(
-        [
-            ('cash', 'Nakit'),
-            ('card', 'Kart'),
-            ('transfer', 'Havale/EFT'),
-            ('pos', 'POS'),
-            ('other', 'Diğer'),
-        ],
-        string='Ödeme Tipi',
+    ledger_id = fields.Many2one(
+        'veresiye.ledger',
+        string='Fiş',
         required=True,
-        default='cash',
-    )
-    date = fields.Date(string='Tarih', default=fields.Date.context_today)
-    note = fields.Char(string='Not')
-    currency_id = fields.Many2one(
-        'res.currency', related='partner_id.currency_id', readonly=True
+        help='Ödeme yapılacak fiş'
     )
 
-    def action_confirm(self):
-        self.ensure_one()
-        description = self.note or (
-            'Kısmi Ödeme'
-            if self.amount < self.partner_id.x_ledger_balance
-            else 'Ödeme'
-        )
-        self.env['ps.ledger.entry'].create(
-            {
-                'partner_id': self.partner_id.id,
-                'date': self.date,
-                'type': 'payment',
-                'quantity': 1.0,
-                'price_unit': self.amount,
-                'description': description,
-                'payment_method': self.payment_method,
-            }
-        )
+    amount = fields.Monetary(
+        string='Ödeme Tutarı',
+        required=True,
+        help='Ödenecek tutar'
+    )
+
+    date = fields.Date(
+        string='Ödeme Tarihi',
+        required=True,
+        default=fields.Date.today,
+        help='Ödeme tarihi'
+    )
+
+    note = fields.Char(
+        string='Not',
+        help='Ödeme notu'
+    )
+
+    currency_id = fields.Many2one(
+        related='ledger_id.currency_id',
+        string='Para Birimi'
+    )
+
+    def action_confirm_payment(self):
+        """Ödeme kaydını oluştur"""
+        self.env['veresiye.payment'].create({
+            'ledger_id': self.ledger_id.id,
+            'date': self.date,
+            'amount': self.amount,
+            'note': self.note or '',
+        })
         return {'type': 'ir.actions.act_window_close'}
